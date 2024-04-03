@@ -1,58 +1,15 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-
-<h1>Calendario</h1>
-
-<table>
-  
-  <caption>
-    <button class="next-month-btn">&lt;</button>
-    Abril
-    <button class="next-month-btn">&gt;</button>
-  </caption>
-
-  <thead>
-    <tr>
-      <th>Lunes</th>
-      <th>Martes</th>
-      <th>Miércoles</th>
-      <th>Jueves</th>
-      <th>Viernes</th>
-      <th>Sábado</th>
-      <th>Domingo</th>
-    </tr>
-  <tbody>
-    <tr><td><button class="calendario-btn">1</button></td><td><button class="calendario-btn">2</button></td><td><button class="calendario-btn">3</button></td><td><button class="calendario-btn">4</button></td><td><button class="calendario-btn">5</button></td><td><button class="calendario-btn">6</button></td><td><button class="calendario-btn">7</button></td></tr>
-    <tr><td><button class="calendario-btn">8</button></td><td><button class="calendario-btn">9</button></td><td><button class="calendario-btn">10</button></td><td><button class="calendario-btn">11</button></td><td><button class="calendario-btn">12</button></td><td><button class="calendario-btn">13</button></td><td><button class="calendario-btn">14</button></td></tr>
-    <tr><td><button class="calendario-btn">15</button></td><td><button class="calendario-btn">16</button></td><td><button class="calendario-btn">17</button></td><td><button class="calendario-btn">18</button></td><td><button class="calendario-btn">19</button></td><td><button class="calendario-btn">20</button></td><td><button class="calendario-btn">21</button></td></tr>
-    <tr><td><button class="calendario-btn">22</button></td><td><button class="calendario-btn">23</button></td><td><button class="calendario-btn">24</button></td><td><button class="calendario-btn">25</button></td><td><button class="calendario-btn">26</button></td><td><button class="calendario-btn">27</button></td><td><button class="calendario-btn">28</button></td></tr>
-    <tr><td><button class="calendario-btn">29</button></td><td><button class="calendario-btn">30</button></td><td><button class="calendario-btn">31</button></td><td></td><td></td><td></td><td></td></tr>
-  </tbody>
-</table>
-
-<h2>
-<label>
-  Elija fecha para reservar entrenamiento:
-  <input type="date" name="calendario" />
-</label>
-</h2>
-
-<a href="#">Reservar hora</a>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-
-<router-outlet />
+<div>
+  <div class="header-calendar">
+    <h1>
+      <button (click)="changeMonth(-1)">Antes</button>
+      {{dateSelect | date:'MMMM, yyyy'}}
+      <button (click)="changeMonth(2)">Despues</button>
+    </h1>
+  </div>
+  <ol>
+    <li *ngFor="let day of week" class="day-name">{{ day }}</li>    
+    <li [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first">
+      <span>{{day?.value}}</span>
+    </li>
+  </ol>
+</div>
