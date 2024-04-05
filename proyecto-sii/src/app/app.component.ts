@@ -1,59 +1,52 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import moment from 'moment';
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { UsuariosService } from './services/usuarios.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, RouterLink, FormsModule, TitleCasePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'proyecto-sii';
+  _rolIndex: number = 0
 
-  week: any = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"] ;
-
-  monthSelect: any[] | undefined;
-  dateSelect: any ;
-
-  constructor() {
-
+  constructor(private usuarioService: UsuariosService, private router: Router) {
+    this.actualizarRol()
   }
 
-  ngOnInit() {
-    this.getDaysFromDate(1, 2024)
+  get rolIndex() {
+    return this._rolIndex;
   }
 
-  getDaysFromDate(month: number, year: number) {
-    const startDate = moment.utc(`${year}/${month}/01`)
-    const endDate = startDate.clone().endOf('month')
-    this.dateSelect = startDate
-
-    const diffDays = endDate.diff(startDate, 'days', true)
-    const numberDays = Math.round(diffDays)
-
-    const arrayDays = Object.keys([...Array(numberDays)]).map((a: any ) => {
-      a = parseInt(a) + 1 ;
-      const dayObject = moment(`${year}-${month}-${a}`)
-      return {
-        name: dayObject.format('dddd'),
-        value: a,
-        indexWeek: dayObject.isoWeekday(),
-      }
-    }) ;
-    this.monthSelect = arrayDays ;
+  set rolIndex(i: number) {
+    this._rolIndex = i;
+    this.actualizarRol();
   }
 
-  changeMonth(flag: number) {
-    if(flag < 0) {
-      const prevDate = this.dateSelect.clone().subtract(1, 'month') ;
-      this.getDaysFromDate(prevDate.format('MM'), prevDate.format('YYYY')) ;
+  actualizarRol() {
+    let u = this.usuarioSesion;
+    if (u) {
+      this.usuarioService.rolCentro = u.roles[this.rolIndex];
     } else {
-      const nextDate = this.dateSelect.clone().add(1, 'month') ;
-      this.getDaysFromDate(nextDate.format('MM'), nextDate.format('YYYY')) ;
+      this.usuarioService.rolCentro = undefined;
     }
   }
 
+  get rol() {
+    return this.usuarioService.rolCentro;
+  }
+
+  get usuarioSesion() {
+    return this.usuarioService.getUsuarioSesion();
+  }
+
+  logout() {
+    this.usuarioService.doLogout();
+    this.actualizarRol();
+    this.router.navigateByUrl('/login');
+  }
 }
