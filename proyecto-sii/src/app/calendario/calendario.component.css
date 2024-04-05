@@ -70,6 +70,10 @@
     padding: 0 ;
   }
 
+  .dia-semana {
+    background: #eee ;
+    font-weight: bold ;
+  }
 
   .prev-month-btn {
     color: var(--gray-900);
