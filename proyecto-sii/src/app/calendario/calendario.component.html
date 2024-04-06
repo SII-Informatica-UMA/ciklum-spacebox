@@ -1,14 +1,14 @@
 <div>
   <div class="header-calendar">
     <h1>
-      <button (click)="changeMonth(-1)">Antes</button>
+      <button (click)="changeMonth(-1)" class="prev-month-btn">Antes</button>
       {{dateSelect | date:'MMMM, yyyy'}}
-      <button (click)="changeMonth(2)">Despues</button>
+      <button (click)="changeMonth(2)" class="next-month-btn">Despues</button>
     </h1>
   </div>
   <ol>
     <li *ngFor="let day of week" class="day-name">{{ day }}</li>    
-    <li [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first">
+    <li [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
       <span>{{day?.value}}</span>
     </li>
   </ol>
