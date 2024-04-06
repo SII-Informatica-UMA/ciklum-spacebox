@@ -9,7 +9,8 @@
   <ol>
     <li *ngFor="let day of week" class="day-name">{{ day }}</li>    
     <li [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
-      <span>{{day?.value}}</span>
+      <a [routerLink]="'./reserva'" ><span>{{day?.value}}</span></a>
     </li>
   </ol>
+  <app-lista-reservas></app-lista-reservas>
 </div>

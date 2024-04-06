@@ -1,0 +1,10 @@
+.lista-reservas {
+    list-style: none;
+    
+}
+
+.lista-reservas > li {
+    font-size: 23px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

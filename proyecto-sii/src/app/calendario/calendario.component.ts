@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RouterLink  } from '@angular/router';
 import moment from 'moment';
+import { ListaReservasComponent } from '../lista-reservas/lista-reservas.component';
 
 @Component({
   selector: 'app-calendario',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, RouterLink],
+  imports: [RouterOutlet, CommonModule, RouterLink, ListaReservasComponent],
   templateUrl: './calendario.component.html',
   styleUrl: './calendario.component.css'
 })
