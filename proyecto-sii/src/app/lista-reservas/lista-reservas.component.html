@@ -1,7 +1,10 @@
-<div>
-    <h1>RESERVA ENTRENAMIENTO</h1>
-
-    <ul class ="lista-reservas">
-        <li *ngFor="let hora of horasDis"><span>{{convertir(hora)}}</span> - DISPONIBLE</li>
-    </ul>
+<div class="principal-reserva">
+    <h1>Entrenamientos disponibles</h1>
+    <div class="selector-div">
+        Horas disponibles: <select class="select-hora" placeholder="horas disponibles">
+            <option *ngFor="let i of range(6, 23)">
+                <span>{{convertir(i)}}</span>
+            </option>
+        </select>
+    </div>
 </div>

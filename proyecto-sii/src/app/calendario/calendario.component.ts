@@ -7,6 +7,7 @@ import { ListaReservasComponent } from '../lista-reservas/lista-reservas.compone
 import { Usuario, UsuarioImpl } from '../entities/usuario';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-calendario',
@@ -23,7 +24,7 @@ export class CalendarioComponent {
   monthSelect: any[] | undefined;
   dateSelect: any ;
 
-  constructor(private usuariosService: UsuariosService) {
+  constructor(private usuariosService: UsuariosService, private modalService: NgbModal) {
    
   }
 
@@ -72,12 +73,13 @@ export class CalendarioComponent {
   }
 
   clickDay(day: any) {
+    /*
     const monthYear = this.dateSelect.format('MM-YYYY') ;
     const parse = `${monthYear}-{day.value}` ;
     console.log(day) ;
     console.log(monthYear) ;
-
-
+    */
+    let ref = this.modalService.open(ListaReservasComponent);
   }
 
 }

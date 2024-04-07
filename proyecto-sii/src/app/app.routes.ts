@@ -5,7 +5,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { CalendarioComponent } from './calendario/calendario.component';
-import { ReservaComponent } from './reserva/reserva.component';
 import { ListaReservasComponent } from './lista-reservas/lista-reservas.component';
 
 export const routes: Routes = [
@@ -32,10 +31,6 @@ export const routes: Routes = [
   {
     path: 'calendario',
     component: CalendarioComponent
-  },
-  {
-    path: 'reserva',
-    component:  ReservaComponent
   },
   {
     path: 'lista-reservas' ,

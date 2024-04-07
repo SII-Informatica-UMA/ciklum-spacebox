@@ -1,16 +1,18 @@
-.lista-reservas {
-    list-style: none;
-    
+.principal-reserva {
+    background-color: beige;
 }
 
 h1 {
     text-align: center;
-}
-.lista-reservas > li {
-    font-size: 23px;
-    text-align: center;
+    padding-bottom: 20px;
 }
 
-.lista-reservas > li > pre {
-    padding-left: 10px;
+.selector-div {
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+}
+
+.select-horas {
+    cursor: pointer;
 }

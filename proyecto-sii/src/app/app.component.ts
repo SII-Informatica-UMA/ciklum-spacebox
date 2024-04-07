@@ -3,6 +3,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UsuariosService } from './services/usuarios.service';
+import { Reserva } from './reserva';
 
 @Component({
   selector: 'app-root',

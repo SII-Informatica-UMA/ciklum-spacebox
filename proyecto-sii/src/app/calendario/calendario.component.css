@@ -53,10 +53,11 @@
   .day-month {
     border: 1px groove black;
     background-color: mintcream;
+    cursor: pointer;
   }
 
   .day-month:hover {
-    background-color: lightblue;
+    background-color: lightblue; 
   }
 
   .prev-month-btn {
