@@ -4,6 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { RouterLink  } from '@angular/router';
 import moment from 'moment';
 import { ListaReservasComponent } from '../lista-reservas/lista-reservas.component';
+import { Usuario, UsuarioImpl } from '../entities/usuario';
+import { Rol } from '../entities/login';
+import { UsuariosService } from '../services/usuarios.service';
 
 @Component({
   selector: 'app-calendario',
@@ -20,8 +23,18 @@ export class CalendarioComponent {
   monthSelect: any[] | undefined;
   dateSelect: any ;
 
-  constructor() {
+  constructor(private usuariosService: UsuariosService) {
+   
+  }
 
+  private get rol() {
+    return this.usuariosService.rolCentro;
+  }
+
+  
+  isCliente(): boolean {
+    console.log("Pregunta cliente: "+this.rol);
+    return this.rol?.rol == Rol.CLIENTE;
   }
 
   ngOnInit() {

@@ -16,5 +16,11 @@
       <span>{{day?.value}}</span>
     </li>
   </ol>
+  <div><button class="reservar-dia"><a [routerLink]="'/lista-reservas'" >Reservar</a></button></div>
 </div>
-<div><button class="reservar-dia"><a [routerLink]="'/lista-reservas'" >Reservar</a></button></div>
+
+<!-- class="col-12" *ngIf="isCliente()
+
+  <div class="col-12" *ngIf="!isCliente()">
+  <p class="alert alert-danger">No tiene permisos para ver este contenido.</p>
+ </div> -->

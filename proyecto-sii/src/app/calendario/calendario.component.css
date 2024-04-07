@@ -16,10 +16,6 @@
     text-align: center ;
   }
 
-  .day-month:active {
-    background-color: #3e8e41;
-  }
-
   ol {
     list-style: none;
     display: grid ;
@@ -57,6 +53,10 @@
   .day-month {
     border: 1px groove black;
     background-color: mintcream;
+  }
+
+  .day-month:hover {
+    background-color: lightblue;
   }
 
   .prev-month-btn {

@@ -24,11 +24,21 @@
     <input class="form-control" [class.is-invalid]="error" id="rcontrasenia" name="rcontrasenia" [(ngModel)]="rpassword"
       placeholder="(deje en blanco para mantener o generar)" type="password">
 
-    <div class="form-check">
-      <input class="form-check-input" id="administrador" name="administrador" [(ngModel)]="usuario.administrador"
-        type="checkbox">
+    <div class="form-check1">
+      <input class="form-check-input" id="administrador" name="administrador" [(ngModel)]="usuario.administrador" type="checkbox">
       <label class="form-check-label" for="administrador">Administrador</label>
     </div>
+  
+    <div class="form-check2">
+      <input class="form-check-input" id="entrenador" name="entrenador" [(ngModel)]="usuario.entrenador" type="checkbox">
+      <label class="form-check-label" for="entrenador">Entrenador</label>
+    </div>
+
+    <div class="form-check3">
+      <input class="form-check-input" id="cliente" name="cliente" [(ngModel)]="usuario.cliente" type="checkbox">
+      <label class="form-check-label" for="cliente">Cliente</label>
+    </div>
+
   </form>
 </div>
 <div class="modal-footer">
