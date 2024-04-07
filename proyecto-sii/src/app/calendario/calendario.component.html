@@ -1,15 +1,20 @@
 <div>
   <div class="header-calendar">
     <h1>
-      <button (click)="changeMonth(-1)" class="prev-month-btn">Antes</button>
+      <button (click)="changeMonth(-1)" class="prev-month-btn">
+        <img src="assets/flecha.png" alt="Image" class="flecha-izq">
+      </button>
       {{dateSelect | date:'MMMM, yyyy'}}
-      <button (click)="changeMonth(2)" class="next-month-btn">Despues</button>
+      <button (click)="changeMonth(2)" class="next-month-btn">
+        <img src="assets/flecha.png" alt="Image" class="flecha-der">
+      </button>
     </h1>
   </div>
   <ol>
     <li *ngFor="let day of week" class="day-name">{{ day }}</li>    
-    <li [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
-      <a [routerLink]="'./lista-reservas'" ><span>{{day?.value}}</span></a>
+    <li (click)="clickDay(day)"  [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
+      <span>{{day?.value}}</span>
     </li>
   </ol>
 </div>
+<div><button class="reservar-dia"><a [routerLink]="'/lista-reservas'" >Reservar</a></button></div>

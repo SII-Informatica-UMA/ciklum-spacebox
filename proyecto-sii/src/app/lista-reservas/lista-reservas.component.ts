@@ -1,11 +1,12 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 import { ReservaComponent } from '../reserva/reserva.component';
 import { CommonModule, Time } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lista-reservas',
   standalone: true,
-  imports: [ReservaComponent, CommonModule],
+  imports: [ReservaComponent, CommonModule, RouterLink],
   templateUrl: './lista-reservas.component.html',
   styleUrl: './lista-reservas.component.css'
 })

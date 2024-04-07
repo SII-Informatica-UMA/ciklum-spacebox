@@ -25,7 +25,7 @@ export class CalendarioComponent {
   }
 
   ngOnInit() {
-    this.getDaysFromDate(1, 2024)
+    this.getDaysFromDate(4, 2024)
   }
 
   getDaysFromDate(month: number, year: number) {
@@ -56,6 +56,15 @@ export class CalendarioComponent {
       const nextDate = this.dateSelect.clone().add(1, 'month') ;
       this.getDaysFromDate(nextDate.format('MM'), nextDate.format('YYYY')) ;
     }
+  }
+
+  clickDay(day: any) {
+    const monthYear = this.dateSelect.format('MM-YYYY') ;
+    const parse = `${monthYear}-{day.value}` ;
+    console.log(day) ;
+    console.log(monthYear) ;
+
+
   }
 
 }
