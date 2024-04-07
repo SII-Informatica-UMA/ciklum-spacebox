@@ -57,8 +57,5 @@ export class CalendarioComponent {
       this.getDaysFromDate(nextDate.format('MM'), nextDate.format('YYYY')) ;
     }
   }
-  reservar(){
-    
-  }
 
 }

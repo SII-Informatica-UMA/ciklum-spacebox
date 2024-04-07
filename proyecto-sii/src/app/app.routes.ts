@@ -6,6 +6,7 @@ import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.compo
 import { PrincipalComponent } from './principal/principal.component';
 import { CalendarioComponent } from './calendario/calendario.component';
 import { ReservaComponent } from './reserva/reserva.component';
+import { ListaReservasComponent } from './lista-reservas/lista-reservas.component';
 
 export const routes: Routes = [
   {
@@ -35,5 +36,9 @@ export const routes: Routes = [
   {
     path: 'reserva',
     component:  ReservaComponent
+  },
+  {
+    path: 'lista-reservas/:fecha',
+    component: ListaReservasComponent
   }
 ];
