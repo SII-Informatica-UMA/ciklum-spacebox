@@ -47,7 +47,44 @@ export class CalendarioComponent {
   }
 
   ngOnInit() {
-    this.getDaysFromDate(4, 2024)
+    this.getDaysFromDate(moment().month() + 1, moment().year()) ;
+  }
+
+  isBeforeToday(day: any) {
+    const today = moment()  ; 
+    console.log(today) ;
+    const monthYear = this.dateSelect.format('MM-YYYY') ;
+    const parse = `${day.value}-${monthYear}` ;
+    const dayObject = moment(parse) ;
+    return dayObject.isBefore(today, 'day') ;
+  }
+
+  isBeforeDate(day:any, date: any) {
+    const today = `${moment().format('YYYY-MM-DD')}`  ; 
+    const parse = `${date}-${day.value}` ;
+    const dayObject = moment(parse) ;
+    console.log(dayObject) ;
+    console.log(today) ;
+    return dayObject.isBefore(today, 'day') ;
+  }
+
+  isAfterDate(day:any, date: any) {
+    const today = `${moment().format('YYYY-MM-DD')}`  ; 
+    const parse = `${date}-${day.value}` ;
+    const dayObject = moment(parse) ;
+    console.log(dayObject) ;
+    console.log(today) ;
+    return dayObject.isAfter(today, 'day') ;
+  }
+
+  isToday(day:any, date: any) {
+    const today = `${moment().format('YYYY-MM-DD')}`  ; 
+    const parse = `${date}-${day.value}` ;
+    const dayObject = moment(parse) ;
+    console.log(dayObject) ;
+    console.log(today) ;
+    return dayObject.isSame(today, 'day') ;
+ 
   }
 
   getDaysFromDate(month: number, year: number) {
@@ -70,6 +107,8 @@ export class CalendarioComponent {
     this.monthSelect = arrayDays ;
   }
 
+
+
   changeMonth(flag: number) {
     if(flag < 0) {
       const prevDate = this.dateSelect.clone().subtract(1, 'month') ;
@@ -87,7 +126,10 @@ export class CalendarioComponent {
     console.log(day) ;
     console.log(monthYear) ;
     */
+
+    if(!this.isBeforeToday(day)) {
     let ref = this.modalService.open(ListaReservasComponent);
-  }
+   }
+}
 
 }

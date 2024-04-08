@@ -1,4 +1,3 @@
-<div>
 <div *ngIf="isCliente()">
   <div class="header-calendar">
     <h1>
@@ -12,9 +11,17 @@
     </h1>
   </div>
   <ol>
-    <li *ngFor="let day of week" class="day-name">{{ day }}</li>    
-    <li (click)="clickDay(day)"  [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
-      <span>{{day?.value}}</span>
+    <li *ngFor="let day of week" class="day-name">{{ day }}</li>
+    <li  (click)="clickDay(day)" [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" *ngFor="let day of monthSelect ; let first = first" class="day-month">
+      <div *ngIf="isBeforeDate(day, dateSelect | date:'YYYY-MM' )" class="a">
+        <span>{{day?.value}}</span>
+      </div>
+      <div *ngIf="isToday(day, dateSelect | date:'YYYY-MM')" class="b">
+        <span>{{day?.value}}</span>
+      </div>
+      <div *ngIf="isAfterDate(day, dateSelect | date:'YYYY-MM')" class="c">
+        <span>{{day?.value}}</span>
+      </div>
     </li>
   </ol>
   <!--<div><button class="reservar-dia"><a [routerLink]="'/lista-reservas'" >Reservar</a></button></div>-->
@@ -42,7 +49,6 @@
 
 <div *ngIf="!isClienteEntrenador()">
   <p class="alert alert-danger">No tiene permisos para ver este contenido.</p>
-</div>
 </div>
 <!-- class="col-12" *ngIf="isCliente()
 
