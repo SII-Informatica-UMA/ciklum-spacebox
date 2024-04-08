@@ -4,7 +4,7 @@
 
 h1 {
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 .selector-div {
@@ -16,3 +16,11 @@ h1 {
 .select-horas {
     cursor: pointer;
 }
+.reservar-dia {
+    
+    height: 1.5rem;
+    width: 4rem;
+    margin-top: 2% ;
+    font-size: small;
+    
+  }
