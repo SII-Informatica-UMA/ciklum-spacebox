@@ -1,11 +1,11 @@
 <div class="principal-reserva">
     <h1>Entrenamientos disponibles</h1>
     <div class="selector-div">
-        Horas disponibles: <select class="select-hora" placeholder="horas disponibles">
-            <option *ngFor="let i of range(6, 23)">
-                <span>{{convertir(i)}}</span>
+        Horas disponibles: <select class="select-hora" [(ngModel)]="horaSelec">
+            <option *ngFor="let hora of horasDis">
+                <span>{{convertir(hora)}}</span>
             </option>
         </select>
-        <div><button class="reservar-dia"><a>Reservar</a></button></div>
+        <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
     </div>
 </div>
