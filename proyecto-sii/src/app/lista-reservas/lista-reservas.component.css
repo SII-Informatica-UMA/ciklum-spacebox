@@ -1,7 +1,10 @@
-.principal-reserva {
+.principal-reserva-cliente {
     background-color: beige;
 }
 
+.principal-reserva-entrenador {
+    background-color: aquamarine;
+}
 h1 {
     text-align: center;
     padding-bottom: 30px;
