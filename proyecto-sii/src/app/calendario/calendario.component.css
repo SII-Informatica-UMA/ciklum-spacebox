@@ -51,7 +51,6 @@
 
   .day-month {
     border: 1px groove black;
-    cursor: pointer;
   }
 
   .day-month:hover {
@@ -110,8 +109,10 @@
   .b {
     background-color: rgba(161, 253, 143, 0.4)  ;
     padding: 10px;
+    cursor: pointer;
   }
 
   .c {
      padding: 10px;
+     cursor: pointer;
   }
