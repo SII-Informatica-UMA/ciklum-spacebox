@@ -27,7 +27,7 @@ export class UsuariosService {
         apellido1: obj.usuario.apellido1,
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
-        roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
+        roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}, {rol: Rol.GERENTE}, {rol: Rol.ENTRENADOR}, {rol: Rol.CLIENTE}]: obj.usuario.gerente?[{rol: Rol.GERENTE}, {rol: Rol.ENTRENADOR}, {rol: Rol.CLIENTE}]:obj.usuario.entrenador?[{rol: Rol.ENTRENADOR}, {rol: Rol.CLIENTE}]:obj.usuario.cliente?[{rol: Rol.CLIENTE}]: [],
         /*roles: obj.usuario.gerente?[{rol: Rol.GERENTE}]:[],
         roles: obj.usuario.entrenador?[{rol: Rol.ENTRENADOR}]:[],
         roles: obj.usuario.cliente?[{rol: Rol.CLIENTE}]:[],*/
