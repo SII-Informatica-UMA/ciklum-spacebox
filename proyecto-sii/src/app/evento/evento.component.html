@@ -1,0 +1,29 @@
+<div class="principal-reserva-cliente">
+    <!--Ventana que se muestra para hacer la reserva-->
+    <div *ngIf="!activo()">
+        <h1>¿Activar evento?</h1>
+        <div class="selector-div">
+            Horas disponibles: <select [(ngModel)]="horaSelec">
+                <option *ngFor="let hora of horasDis">
+                    <span>{{convertir(hora)}}</span>
+                </option>
+            </select>
+            <div><button class="activa" (click)="activa()"><a>Activar</a></button></div>
+        </div>
+    </div>
+
+    <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
+        <h1>¡Evento activado con exito!</h1>
+    </div>
+
+    <div *ngIf="activo()">
+        <h1>¿Desactivar evento?</h1>
+        <div class="selector-div">
+            <div><button class="activa" (click)="desactiva()"><a>Desactivar</a></button></div>
+        </div>
+    </div>
+
+    <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
+        <h1>¡Evento desactivado con exito!</h1>
+    </div>
+</div>
