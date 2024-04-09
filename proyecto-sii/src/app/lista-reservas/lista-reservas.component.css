@@ -18,8 +18,10 @@ h1 {
     position: relative;
 }
 
-.select-horas {
+select {
     cursor: pointer;
+    border-radius: 7px;
+    width: 6rem;
 }
 
 .reservar-dia {

@@ -127,3 +127,15 @@
      padding: 10px;
      cursor: pointer;
   }
+
+  .mesActual{
+    height: 2.5rem;
+    width: 6rem;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(23, 28, 29);
+    border-radius: 7px;
+  }

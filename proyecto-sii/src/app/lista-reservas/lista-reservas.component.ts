@@ -5,7 +5,6 @@ import { Reserva } from '../reserva';
 import { FormsModule } from '@angular/forms';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -17,7 +16,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class ListaReservasComponent{
 
-  reservas: Reserva[] = []
+  reservas: Reserva[] = [
+    new Reserva(7, 'cliente1', 'entrenador1'),
+    new Reserva(15, 'cliente2', 'entrenador1')
+  ]
+  
   horasDis: number[] = this.rellenarHoras();
   horaSelec: string = ''
   pulsarReserva: boolean = false
