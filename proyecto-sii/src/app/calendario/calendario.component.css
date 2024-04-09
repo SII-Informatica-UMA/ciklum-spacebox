@@ -110,17 +110,20 @@
   }
 
   .a {
+    text-align: left;
     background-color: rgb(194, 194, 194)  ;
     padding: 10px ;
   }
 
   .b {
+    text-align: left;
     background-color: rgba(161, 253, 143, 0.4)  ;
     padding: 10px;
     cursor: pointer;
   }
 
   .c {
+    text-align: left;
      padding: 10px;
      cursor: pointer;
   }

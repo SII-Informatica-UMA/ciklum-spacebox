@@ -24,7 +24,7 @@
       </div>
     </li>
   </ol>
-  <!--<div><button class="reservar-dia"><a [routerLink]="'/lista-reservas'" >Reservar</a></button></div>-->
+  <div><button (click)="ngOnInit()" class="mesActual">Volver </button></div>
 </div>
 
 <div *ngIf="isEntrenador()">
@@ -53,6 +53,7 @@
       </div>
     </li>
   </ol>
+  <div><button (click)="ngOnInit()" class="mesActual">Volver </button></div>
 </div>
 
 <div *ngIf="!isClienteEntrenador()">
