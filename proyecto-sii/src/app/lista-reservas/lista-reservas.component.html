@@ -12,19 +12,29 @@
         </div>
     </div>
 
-    <div *ngIf="this.pulsarReserva">
+    <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
         <h1>¡Reserva realizada con exito!</h1>
     </div>
 
+    <div *ngIf="this.pulsarReserva && this.horaNoSeleccionada">
+        <h1>¡ERROR! No ha seleccionado ninguna hora para su reserva. Intentelo de nuevo</h1>
+        <button class="volver-button" (click)="this.pulsarReserva=false"><a>Volver a intentarlo</a></button>
+    </div>
 </div>
 
 <div *ngIf="isEntrenador()" class="principal-reserva-entrenador">
     <h1>Entrenamientos</h1>
     <div class="selector-div">
-        Entrenamientos de hoy: 
+        <h2>Entrenamientos de hoy: </h2>
         <br>
-        <ul>
-            <li *ngFor="let res of reservas">{{mostrarReserva(res)}}</li>
-        </ul>
+        <div *ngIf="this.reservasEmpty" id="sin-reserva">
+            No tiene ninguna reserva todavía
+        </div>
+
+        <div *ngIf="!this.reservasEmpty" id="con-reserva">
+            <ul>
+                <li *ngFor="let res of reservas">{{mostrarReserva(res)}}</li>
+            </ul>
+        </div>
     </div>
 </div>

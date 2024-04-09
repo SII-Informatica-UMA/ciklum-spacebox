@@ -21,6 +21,8 @@ export class ListaReservasComponent{
   horasDis: number[] = this.rellenarHoras();
   horaSelec: string = ''
   pulsarReserva: boolean = false
+  horaNoSeleccionada: boolean = true
+  reservasEmpty: boolean = true
 
   private get rol() {
     return this.usuariosService.rolCentro;
@@ -53,6 +55,7 @@ export class ListaReservasComponent{
   hacerReserva(){
     if(this.horaSelec == ''){
       console.log('ERROR')
+      this.pulsarReserva = true;
     } else {   
       let h = parseInt(this.horaSelec.substring(0,2))
       console.log(h)
@@ -62,6 +65,8 @@ export class ListaReservasComponent{
       let r = new Reserva(h, 'cliente', 'entrenador');
       this.reservas.push()
       this.pulsarReserva = true;
+      this.horaNoSeleccionada = false;
+      this.reservasEmpty = false;
     }
   }
 
