@@ -127,9 +127,9 @@ export class CalendarioComponent {
     console.log(monthYear) ;
     */
 
-    if(!this.isBeforeToday(day)) {
-    let ref = this.modalService.open(ListaReservasComponent);
-   }
+    if(!this.isBeforeDate(day, this.dateSelect.format('YYYY-MM'))) {
+      let ref = this.modalService.open(ListaReservasComponent);
+    }
 }
 
 }
