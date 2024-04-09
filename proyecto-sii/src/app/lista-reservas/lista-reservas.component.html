@@ -17,7 +17,10 @@
     </div>
 
     <div *ngIf="this.pulsarReserva && this.horaNoSeleccionada">
-        <h1>¡ERROR! No ha seleccionado ninguna hora para su reserva. Intentelo de nuevo</h1>
+        <h1>¡ERROR!</h1>
+        <br>
+        <h2>Intentelo de nuevo</h2>
+        <br>
         <button class="volver-button" (click)="this.pulsarReserva=false"><a>Volver a intentarlo</a></button>
     </div>
 </div>
