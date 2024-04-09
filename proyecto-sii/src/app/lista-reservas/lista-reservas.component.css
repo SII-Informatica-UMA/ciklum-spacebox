@@ -19,11 +19,15 @@ h1 {
 .select-horas {
     cursor: pointer;
 }
+
 .reservar-dia {
-    
-    height: 1.5rem;
-    width: 4rem;
-    margin-top: 2% ;
-    font-size: small;
-    
-  }
+    height: 2.5rem;
+    width: 6rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(23, 28, 29);
+    border-radius: 7px;
+}

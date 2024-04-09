@@ -20,6 +20,7 @@ export class ListaReservasComponent{
   reservas: Reserva[] = []
   horasDis: number[] = this.rellenarHoras();
   horaSelec: string = ''
+  pulsarReserva: boolean = false
 
   private get rol() {
     return this.usuariosService.rolCentro;
@@ -60,6 +61,7 @@ export class ListaReservasComponent{
       
       let r = new Reserva(h, 'cliente', 'entrenador');
       this.reservas.push()
+      this.pulsarReserva = true;
     }
   }
 

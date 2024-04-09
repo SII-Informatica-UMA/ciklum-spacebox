@@ -1,13 +1,21 @@
 <div *ngIf="isCliente()" class="principal-reserva-cliente">
-    <h1>Entrenamientos disponibles</h1>
-    <div class="selector-div">
-        Horas disponibles: <select class="select-hora" [(ngModel)]="horaSelec">
-            <option *ngFor="let hora of horasDis">
-                <span>{{convertir(hora)}}</span>
-            </option>
-        </select>
-        <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
+    <!--Ventana que se muestra para hacer la reserva-->
+    <div *ngIf="!this.pulsarReserva">
+        <h1>Entrenamientos disponibles</h1>
+        <div class="selector-div">
+            Horas disponibles: <select class="select-hora" [(ngModel)]="horaSelec">
+                <option *ngFor="let hora of horasDis">
+                    <span>{{convertir(hora)}}</span>
+                </option>
+            </select>
+            <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
+        </div>
     </div>
+
+    <div *ngIf="this.pulsarReserva">
+        <h1>¡Reserva realizada con exito!</h1>
+    </div>
+
 </div>
 
 <div *ngIf="isEntrenador()" class="principal-reserva-entrenador">
