@@ -18,8 +18,8 @@ import moment from 'moment';
 export class ListaReservasComponent{
 
   reservas: Reserva[] = [
-    new Reserva(7, 'cliente1', 'entrenador1'),
-    new Reserva(15, 'cliente2', 'entrenador1')
+    new Reserva(7, 'cliente1', 'entrenador1', 8),
+    new Reserva(15, 'cliente2', 'entrenador1', 16)
   ]
   aux!: boolean; 
   horasDis: number[] = this.rellenarHoras();
@@ -71,7 +71,7 @@ export class ListaReservasComponent{
       this.horasDis = this.horasDis.filter((elemento) => elemento != h)
       this.horaSelec = ''
       
-      let r = new Reserva(h, 'cliente', 'entrenador');
+      let r = new Reserva(h, 'cliente', 'entrenador', 8);
       this.reservas.push()
       this.pulsarReserva = true;
       this.horaNoSeleccionada = false;

@@ -25,6 +25,7 @@
     </li>
   </ol>
   <div><button (click)="ngOnInit()" class="mesActual">Volver </button></div>
+  <div><a [routerLink]="'/entrenamientos'">Ver entrenamientos</a></div>
 </div>
 
 <div *ngIf="isEntrenador()">
@@ -54,6 +55,7 @@
     </li>
   </ol>
   <div><button (click)="ngOnInit()" class="mesActual">Volver </button></div>
+  <div><a [routerLink]="'/entrenamientos'">Ver entrenamientos</a></div>
 </div>
 
 <div *ngIf="!isClienteEntrenador()">

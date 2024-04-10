@@ -6,6 +6,7 @@ import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.compo
 import { PrincipalComponent } from './principal/principal.component';
 import { CalendarioComponent } from './calendario/calendario.component';
 import { ListaReservasComponent } from './lista-reservas/lista-reservas.component';
+import { EntrenamientosComponent } from './entrenamientos/entrenamientos.component';
 
 export const routes: Routes = [
   {
@@ -35,5 +36,10 @@ export const routes: Routes = [
   {
     path: 'lista-reservas' ,
     component: ListaReservasComponent
+  },
+  {
+    path: 'entrenamientos'  ,
+    component: EntrenamientosComponent
   }
+
 ];
