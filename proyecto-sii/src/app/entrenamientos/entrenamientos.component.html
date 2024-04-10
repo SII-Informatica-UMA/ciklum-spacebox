@@ -1,0 +1,16 @@
+<div *ngIf = "isCliente()">
+    <h1>Mis entrenamientos</h1>
+    <div class="entrenamientos">
+        <div class="entrenamiento" *ngFor="let entrenamiento of entrenamientos">
+            <div class="entrenamiento-info">
+                <h2>{{entrenamiento.nombre}}</h2>
+                <p>{{entrenamiento.descripcion}}</p>
+                <p>{{entrenamiento.fecha}}</p>
+                <p>{{entrenamiento.hora}}</p>
+            </div>
+            <div class="entrenamiento-actions">
+                <button class="btn btn-primary" (click)="editarEntrenamiento(entrenamiento)">Editar</button>
+                <button class="btn btn-danger" (click)="eliminarEntrenamiento(entrenamiento)">Eliminar</button>
+            </div>
+        </div>
+</div>
