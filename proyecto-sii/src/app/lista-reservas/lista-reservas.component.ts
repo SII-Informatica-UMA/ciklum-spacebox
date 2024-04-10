@@ -26,7 +26,6 @@ export class ListaReservasComponent{
   horaSelec: string = ''
   pulsarReserva: boolean = false
   horaNoSeleccionada: boolean = true
-  reservasEmpty: boolean = true
 
   private get rol() {
     return this.usuariosService.rolCentro;
@@ -76,7 +75,6 @@ export class ListaReservasComponent{
       this.reservas.push()
       this.pulsarReserva = true;
       this.horaNoSeleccionada = false;
-      this.reservasEmpty = false;
     }
   }
 

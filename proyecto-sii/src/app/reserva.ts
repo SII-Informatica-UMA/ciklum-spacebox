@@ -1,8 +1,11 @@
 
 export class Reserva {
+    idReserva: number = -1
     horaIni: number = 0
     cliente: string = ''
     entrenador: string = ''
+    idCliente: number = -1
+    idEntrenador: number = -1
 
     constructor(h: number, c: string, e: string){
         this.horaIni = h

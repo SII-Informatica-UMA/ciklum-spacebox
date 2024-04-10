@@ -6,6 +6,8 @@
 
 .principal-reserva-entrenador {
     background-color: aquamarine;
+    text-align: center;
+    position: relative;
 }
 h1 {
     text-align: center;
@@ -40,6 +42,42 @@ select {
     font-weight: bolder;
     color: white;
     background-color: rgb(23, 28, 29);
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#lista-reservas-entrenador {
+    list-style-type: none;
+    text-align: left;
+}
+
+#lista-reservas-entrenador > li {
+    font-size: 22px;
+    padding-bottom: 10px;
+    margin-right: 21pt;
+}
+
+#hora-cliente {
+    text-align: left;
+}
+
+#boton-cancelar {
+    text-align: right;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(240, 85, 85);
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: 80pt;
+}
+
+.boton-salir {
+    text-align: right;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(240, 85, 85);
     border-radius: 7px;
     margin-top: 10px;
     margin-bottom: 15px;

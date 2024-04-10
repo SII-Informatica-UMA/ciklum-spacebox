@@ -9,11 +9,13 @@
                 </option>
             </select>
             <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
+            <button class="boton-salir">Salir</button>
         </div>
     </div>
 
     <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
         <h1>¡Reserva realizada con exito!</h1>
+        <button class="boton-salir">Salir</button>
     </div>
 
     <div *ngIf="this.pulsarReserva && this.horaNoSeleccionada">
@@ -30,14 +32,21 @@
     <div class="selector-div">
         <h2>Entrenamientos de hoy: </h2>
         <br>
-        <div *ngIf="this.reservasEmpty" id="sin-reserva">
+        <div *ngIf="reservas.length == 0" id="sin-reserva">
             No tiene ninguna reserva todavía
+            <button class="boton-salir">Salir</button>
         </div>
 
-        <div *ngIf="!this.reservasEmpty" id="con-reserva">
-            <ul>
-                <li *ngFor="let res of reservas">{{mostrarReserva(res)}}</li>
+        <div *ngIf="reservas.length > 0" id="con-reserva">
+            <ul id="lista-reservas-entrenador">
+                <li><h3 id="hora-cliente">HORA - CLIENTE</h3></li>
+                <li *ngFor="let res of reservas">
+                    {{mostrarReserva(res)}}
+                    <button id="boton-cancelar">Cancelar</button>
+                    <hr>
+                </li>
             </ul>
+            <button class="boton-salir">Salir</button>
         </div>
     </div>
 </div>
