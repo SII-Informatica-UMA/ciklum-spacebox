@@ -5,6 +5,7 @@ import { Reserva } from '../reserva';
 import { FormsModule } from '@angular/forms';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -20,7 +21,7 @@ export class ListaReservasComponent{
     new Reserva(7, 'cliente1', 'entrenador1'),
     new Reserva(15, 'cliente2', 'entrenador1')
   ]
-  
+  aux!: boolean; 
   horasDis: number[] = this.rellenarHoras();
   horaSelec: string = ''
   pulsarReserva: boolean = false
@@ -38,7 +39,13 @@ export class ListaReservasComponent{
   rellenarHoras(): number[]{
     let t: number[] = []
 
-    for(let i=6; i<=23; i++){
+    let hora: number = 6;
+
+    if(this.aux) hora = Number.parseInt(moment().format('HH').toString()); 
+
+    if(hora < 6) hora = 6;
+
+    for(let i= hora; i<=23; i++){
       t.push(i)
     }
     return t
@@ -92,5 +99,6 @@ export class ListaReservasComponent{
 
     return this.convertir(r.horaIni) + ' - '+ r.cliente
   }
+
 }
 
