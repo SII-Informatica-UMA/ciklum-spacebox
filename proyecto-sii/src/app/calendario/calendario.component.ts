@@ -127,14 +127,11 @@ export class CalendarioComponent {
     console.log(monthYear) ;
     */
 
-    if(this.isToday(day,this.dateSelect.format('YYYY-MM'))){
+    let y: string = this.dateSelect.format('YYYY-MM-')
+    y += day.value;
 
-      ListaReservasComponent.prototype.aux = true;
-      let ref = this.modalService.open(ListaReservasComponent);
-    }
-
-    if(this.isAfterDate(day, this.dateSelect.format('YYYY-MM'))) {
-      ListaReservasComponent.prototype.aux = false;
+    if(!this.isBeforeDate(day, this.dateSelect.format('YYYY-MM'))) {
+      ListaReservasComponent.prototype.fecha = moment(y);
       let ref = this.modalService.open(ListaReservasComponent);
     }
 }

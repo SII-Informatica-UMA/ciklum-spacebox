@@ -17,7 +17,7 @@ import { Reserva } from "../reserva";
 
     export class EntrenamientosComponent {
 
-    entrenamientos: Reserva[] =  [new Reserva(7, 'cliente1', 'entrenador1', 8), new Reserva(8, 'cliente2', 'entrenador2', 9)]; 
+    entrenamientos: Reserva[] =  [new Reserva(7, 'cliente1', 'entrenador1', 8, Date.parse("28-5-2024")), new Reserva(8, 'cliente2', 'entrenador2', 9, Date.parse("27-5-2024"))]; 
     
     constructor(private usuariosService: UsuariosService) {}
     

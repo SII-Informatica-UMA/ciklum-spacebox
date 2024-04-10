@@ -18,14 +18,15 @@ import moment from 'moment';
 export class ListaReservasComponent{
 
   reservas: Reserva[] = [
-    new Reserva(7, 'cliente1', 'entrenador1', 8),
-    new Reserva(15, 'cliente2', 'entrenador1', 16)
+    new Reserva(7, 'cliente1', 'entrenador1', 8, Date.parse("28-5-2024")),
+    new Reserva(15, 'cliente2', 'entrenador1', 16, Date.parse("29-5-2024"))
   ]
-  aux!: boolean; 
+  fecha!: any; 
   horasDis: number[] = this.rellenarHoras();
   horaSelec: string = ''
   pulsarReserva: boolean = false
   horaNoSeleccionada: boolean = true
+  periodicidad: string = "cita-unica"
 
   private get rol() {
     return this.usuariosService.rolCentro;
@@ -40,7 +41,7 @@ export class ListaReservasComponent{
 
     let hora: number = 6;
 
-    if(this.aux) hora = Number.parseInt(moment().format('HH').toString()) + 1; 
+    if(this.fecha) hora = Number.parseInt(moment().format('HH').toString()) + 1; 
 
     if(hora < 6) hora = 6;
 
@@ -71,7 +72,7 @@ export class ListaReservasComponent{
       this.horasDis = this.horasDis.filter((elemento) => elemento != h)
       this.horaSelec = ''
       
-      let r = new Reserva(h, 'cliente', 'entrenador', 8);
+      let r = new Reserva(h, 'cliente', 'entrenador', 8, this.fecha);
       this.reservas.push()
       this.pulsarReserva = true;
       this.horaNoSeleccionada = false;
@@ -98,5 +99,35 @@ export class ListaReservasComponent{
     return this.convertir(r.horaIni) + ' - '+ r.cliente
   }
 
+  reservaPeriodica(){
+
+    let year : string = this.fecha.year;
+    let stringAux : string = "-12-31";
+
+    year+=stringAux;
+
+    let final: Date = this.fecha;
+
+    if(this.periodicidad == "cita-unica"){
+      this.hacerReserva()
+    }else if(this.periodicidad == "semanal"){
+
+      while(this.fecha <= moment(year)){
+        
+        this.hacerReserva();
+        final.setDate(final.getDate() + 7);
+      }
+      
+    }else{
+      
+      while(this.fecha <= moment(year)){
+
+        this.hacerReserva()
+        final.setMonth(final.getMonth()+1);
+        this.fecha = final;
+      }
+
+    }
+  }
 }
 

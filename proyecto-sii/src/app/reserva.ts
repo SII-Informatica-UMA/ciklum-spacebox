@@ -7,12 +7,14 @@ export class Reserva {
     entrenador: string = ''
     idCliente: number = -1
     idEntrenador: number = -1
+    fecha!: any
 
-    constructor(h: number, c: string, e: string, f:number){
+    constructor(h: number, c: string, e: string, f:number, fe: any){
         this.horaIni = h
         this.cliente = c
         this.entrenador = e
         this.horaFin = f
+        this.fecha = fe
     }
     
     setHoraIni(h: number){
