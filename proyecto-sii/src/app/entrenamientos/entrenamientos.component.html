@@ -31,3 +31,7 @@
         </div>
 </div>
 </div>
+
+<div *ngIf="!isClienteEntrenador()">
+    <p class="alert alert-danger">No tiene permisos para ver este contenido.</p>
+  </div>

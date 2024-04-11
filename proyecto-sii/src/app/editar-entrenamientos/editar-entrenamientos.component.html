@@ -1,15 +1,18 @@
-<div>
+<div div *ngIf="!this.pulsarReserva && this.horaNoSeleccionada">
     <h1>Editar entrenamientos</h1>
         <label for="entrenador">Hora Inicio:</label>
         <select [(ngModel)]="horaSelec">
             <option *ngFor="let hora of horasDis">
                 <span>{{convertir(hora)}}</span>
             </option>
-        </select>
-        <br>
-        <label for="entrenador">Hora Fin:</label>
+        </select>   
         <br>
         <button class="btn btn-primary" (click)="hacerReserva()">Guardar</button>
         <br>
         <button class="btn btn-danger" (click)="salir()">Salir</button>
 </div> 
+
+<div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
+    <h1>¡Reserva realizada con exito!</h1>
+    <button class="btn btn-danger" (click)="salir()">Salir</button>
+</div>

@@ -1,0 +1,12 @@
+div {
+    text-align: center;
+}
+
+button {
+text-align: center;
+font-weight: bolder;
+color: white;
+border-radius: 7px;
+margin-top: 10px;
+margin-bottom: 15px;
+}

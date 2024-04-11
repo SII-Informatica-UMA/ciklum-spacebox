@@ -50,4 +50,9 @@ isEntrenador(): any {
     console.log("Pregunta entrenador: " + this.rol);
     return this.rol?.rol == Rol.ENTRENADOR;
     }
+
+    isClienteEntrenador(): boolean {
+        console.log("Pregunta cliente o entrenador: "+this.rol);
+        return this.rol?.rol == Rol.ENTRENADOR || this.rol?.rol == Rol.CLIENTE;
+      }
 }
