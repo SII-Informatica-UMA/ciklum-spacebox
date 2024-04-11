@@ -45,7 +45,7 @@ export class ListaReservasComponent{
 
     let hora: number = 6;
 
-    if(this.fecha) hora = Number.parseInt(moment().format('HH').toString()) + 1; 
+    if(this.fecha.format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) hora = Number.parseInt(moment().format('HH').toString()) + 1; 
 
     if(hora < 6) hora = 6;
 
