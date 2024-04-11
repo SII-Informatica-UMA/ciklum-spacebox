@@ -144,7 +144,12 @@ export class ListaReservasComponent{
   }
 
   cancelar() {
-    this.reservas = this.reservas.filter((elemento) => elemento = this.reservaPendienteCancelar)
+    for(let i = 0; i < this.reservas.length; i++) {
+      if(this.reservas[i] == this.reservaPendienteCancelar) {
+          this.reservas[i] = this.reservas[this.reservas.length - 1];
+          this.reservas.pop();
+      }
+    }
     this.cancelado = true
   }
 }
