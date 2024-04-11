@@ -60,7 +60,7 @@
 
     <div *ngIf="this.confirmacionCancelar && !this.cancelado">
         <h1>¿Está seguro que quiere cancelar esta reserva?</h1>
-        <button class="boton-confirmacion" id="si" (click)="cancelar()">Si</button> <button class="boton-confirmacion" id="no" (click)="salir()">No</button>
+        <button class="boton-confirmacion" id="si" (click)="cancelar()">Si</button> <button class="boton-confirmacion" id="no" (click)="this.confirmacionCancelar = false">No</button>
     </div>
 
     <div *ngIf="this.confirmacionCancelar && this.cancelado">
