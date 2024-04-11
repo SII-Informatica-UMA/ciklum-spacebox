@@ -41,7 +41,8 @@
             <br>
             <div *ngIf="reservas.length == 0" id="sin-reserva">
                 No tiene ninguna reserva todavía
-                <button class="boton-salir">Salir</button>
+                <br>
+                <button class="boton-salir" (click)="salir()">Salir</button>
             </div>
     
             <div *ngIf="reservas.length > 0" id="con-reserva">
@@ -65,6 +66,6 @@
 
     <div *ngIf="this.confirmacionCancelar && this.cancelado">
         <h1>¡Cancelación hecha con éxito!</h1>
-        <button class="boton-salir" (click)="salir()">Salir</button>
+        <button class="boton-salir" (click)="this.confirmacionCancelar = false; this.cancelado = false">Volver</button>
     </div>
 </div>
