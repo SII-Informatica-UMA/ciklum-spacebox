@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
 import moment from 'moment';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -27,12 +28,15 @@ export class ListaReservasComponent{
   pulsarReserva: boolean = false
   horaNoSeleccionada: boolean = true
   periodicidad: string = "cita-unica"
+  confirmacionCancelar: boolean = false
+  reservaPendienteCancelar: Reserva = new Reserva(-1, '', '', -1, -1)
+  cancelado: boolean = false
 
   private get rol() {
     return this.usuariosService.rolCentro;
   }
 
-  constructor(private usuariosService: UsuariosService){
+  constructor(private usuariosService: UsuariosService, public activeModal: NgbActiveModal){
 
   }
   
@@ -128,6 +132,20 @@ export class ListaReservasComponent{
       }
 
     }
+  }
+
+  salir(){
+    this.activeModal.close()
+  }
+
+  confirmarCancelar(r: Reserva) {
+    this.confirmacionCancelar = true
+    this.reservaPendienteCancelar = r
+  }
+
+  cancelar() {
+    this.reservas = this.reservas.filter((elemento) => elemento = this.reservaPendienteCancelar)
+    this.cancelado = true
   }
 }
 

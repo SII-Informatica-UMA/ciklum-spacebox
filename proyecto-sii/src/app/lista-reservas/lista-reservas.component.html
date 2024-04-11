@@ -15,13 +15,13 @@
                 <input type="radio" [(ngModel)] = "periodicidad" name ="periodicidad" value="mensual"> Mensual 
             </div>
             <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
-            <button class="boton-salir">Salir</button>
+            <button class="boton-salir" (click)="salir()">Salir</button>
         </div>
     </div>
 
     <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada">
         <h1>¡Reserva realizada con exito!</h1>
-        <button class="boton-salir">Salir</button>
+        <button class="boton-salir" (click)="salir()">Salir</button>
     </div>
 
     <div *ngIf="this.pulsarReserva && this.horaNoSeleccionada">
@@ -34,25 +34,37 @@
 </div>
 
 <div *ngIf="isEntrenador()" class="principal-reserva-entrenador">
-    <h1>Entrenamientos</h1>
-    <div class="selector-div">
-        <h2>Entrenamientos de hoy: </h2>
-        <br>
-        <div *ngIf="reservas.length == 0" id="sin-reserva">
-            No tiene ninguna reserva todavía
-            <button class="boton-salir">Salir</button>
+    <div *ngIf="!this.confirmacionCancelar">
+        <h1>Entrenamientos</h1>
+        <div class="selector-div">
+            <h2>Entrenamientos de hoy: </h2>
+            <br>
+            <div *ngIf="reservas.length == 0" id="sin-reserva">
+                No tiene ninguna reserva todavía
+                <button class="boton-salir">Salir</button>
+            </div>
+    
+            <div *ngIf="reservas.length > 0" id="con-reserva">
+                <ul id="lista-reservas-entrenador">
+                    <li><h3 id="hora-cliente">HORA - CLIENTE</h3></li>
+                    <li *ngFor="let res of reservas">
+                        {{mostrarReserva(res)}}
+                        <button id="boton-cancelar" (click)="confirmarCancelar(res)">Cancelar</button>
+                        <hr>
+                    </li>
+                </ul>
+                <button class="boton-salir" (click)="salir()">Salir</button>
+            </div>
         </div>
+    </div>
 
-        <div *ngIf="reservas.length > 0" id="con-reserva">
-            <ul id="lista-reservas-entrenador">
-                <li><h3 id="hora-cliente">HORA - CLIENTE</h3></li>
-                <li *ngFor="let res of reservas">
-                    {{mostrarReserva(res)}}
-                    <button id="boton-cancelar">Cancelar</button>
-                    <hr>
-                </li>
-            </ul>
-            <button class="boton-salir">Salir</button>
-        </div>
+    <div *ngIf="this.confirmacionCancelar && !this.cancelado">
+        <h1>¿Está seguro que quiere cancelar esta reserva?</h1>
+        <button class="boton-confirmacion" id="si" (click)="cancelar()">Si</button> <button class="boton-confirmacion" id="no" (click)="salir()">No</button>
+    </div>
+
+    <div *ngIf="this.confirmacionCancelar && this.cancelado">
+        <h1>¡Cancelación hecha con éxito!</h1>
+        <button class="boton-salir" (click)="salir()">Salir</button>
     </div>
 </div>

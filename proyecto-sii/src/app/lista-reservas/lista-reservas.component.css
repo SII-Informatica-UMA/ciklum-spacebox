@@ -82,3 +82,22 @@ select {
     margin-top: 10px;
     margin-bottom: 15px;
 }
+
+.boton-confirmacion {
+    text-align: right;
+    font-weight: bolder;
+    color: white;
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#si {
+    margin-right: 10px;
+    background-color: green;
+}
+
+#no {
+    margin-left: 10px;
+    background-color: rgb(240, 85, 85);
+}
