@@ -34,7 +34,7 @@
 </div>
 
 <div *ngIf="isEntrenador()" class="principal-reserva-entrenador">
-    <div *ngIf="!this.confirmacionCancelar && !this.pulsarAnadir">
+    <div *ngIf="!this.confirmacionCancelar && !this.pulsarAnadir && !this.pulsarEditar">
         <h1>Entrenamientos</h1>
         <div class="selector-div">
             <h2>Entrenamientos de hoy: </h2>
@@ -50,7 +50,7 @@
                     <li><h3 id="hora-cliente">HORA - CLIENTE</h3></li>
                     <li *ngFor="let res of reservas">
                         {{mostrarReserva(res)}}
-                        <button class="boton-editar">Editar</button>
+                        <button class="boton-editar" (click)="this.pulsarEditar = true">Editar</button>
                         <button id="boton-cancelar" (click)="confirmarCancelar(res)">Cancelar</button>
                         <hr>
                     </li>  
@@ -60,6 +60,10 @@
                 <button class="boton-salir" (click)="salir()">Salir</button>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="this.pulsarEditar">
+        <app-editar-entrenamientos></app-editar-entrenamientos>
     </div>
 
     <div *ngIf="this.confirmacionCancelar && !this.cancelado">

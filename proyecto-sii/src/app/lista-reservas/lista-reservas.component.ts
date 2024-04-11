@@ -7,11 +7,12 @@ import { Rol } from '../entities/login';
 import { UsuariosService } from '../services/usuarios.service';
 import moment from 'moment';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { EditarEntrenamientosComponent } from '../editar-entrenamientos/editar-entrenamientos.component';
 
 @Component({
   selector: 'app-lista-reservas',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, EditarEntrenamientosComponent],
   templateUrl: './lista-reservas.component.html',
   styleUrl: './lista-reservas.component.css'
 })
@@ -32,6 +33,7 @@ export class ListaReservasComponent{
   reservaPendienteCancelar: Reserva = new Reserva(-1, '', '', -1, -1)
   cancelado: boolean = false
   pulsarAnadir: boolean = false
+  pulsarEditar: boolean = false
 
   nombreCliente: string = ''
   
