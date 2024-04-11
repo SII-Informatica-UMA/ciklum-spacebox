@@ -34,7 +34,7 @@
 </div>
 
 <div *ngIf="isEntrenador()" class="principal-reserva-entrenador">
-    <div *ngIf="!this.confirmacionCancelar">
+    <div *ngIf="!this.confirmacionCancelar && !this.pulsarAnadir">
         <h1>Entrenamientos</h1>
         <div class="selector-div">
             <h2>Entrenamientos de hoy: </h2>
@@ -50,10 +50,13 @@
                     <li><h3 id="hora-cliente">HORA - CLIENTE</h3></li>
                     <li *ngFor="let res of reservas">
                         {{mostrarReserva(res)}}
+                        <button class="boton-editar">Editar</button>
                         <button id="boton-cancelar" (click)="confirmarCancelar(res)">Cancelar</button>
                         <hr>
-                    </li>
+                    </li>  
                 </ul>
+                <button id="boton-anadir" (click)="this.pulsarAnadir=true">Añadir</button>
+                <br>
                 <button class="boton-salir" (click)="salir()">Salir</button>
             </div>
         </div>
@@ -67,5 +70,40 @@
     <div *ngIf="this.confirmacionCancelar && this.cancelado">
         <h1>¡Cancelación hecha con éxito!</h1>
         <button class="boton-salir" (click)="this.confirmacionCancelar = false; this.cancelado = false">Volver</button>
+    </div>
+
+    <div *ngIf="this.pulsarAnadir && !this.pulsarReserva">
+        <h1>Entrenamientos disponibles el dia {{fecha | date: "dd-MM-yyyy"}}</h1>
+        <div class="selector-div">
+            Horas disponibles: <select [(ngModel)]="horaSelec">
+                <option *ngFor="let hora of horasDis">
+                    <span>{{convertir(hora)}}</span>
+                </option>
+            </select>
+            <br>
+            Cliente: <input placeholder="nombre del cliente" [(ngModel)]="nombreCliente">
+            <div class=" periodicidad">
+                Seleccione la periodicidad de la cita:<br>
+                <input type="radio" [(ngModel)] = "periodicidad" name ="periodicidad" value="cita-unica" checked> Cita única
+                <input type="radio" [(ngModel)] = "periodicidad" name ="periodicidad" value="semanal"> Semanal
+                <input type="radio" [(ngModel)] = "periodicidad" name ="periodicidad" value="mensual"> Mensual 
+            </div>
+            <div><button class="reservar-dia" (click)="hacerReserva()"><a>Reservar</a></button></div>
+            <button class="boton-salir" (click)="salir()">Salir</button>
+        </div>
+    </div>
+
+    <div *ngIf="this.pulsarReserva && !this.horaNoSeleccionada && this.nombreCliente != ''">
+        <h1>¡Reserva realizada con exito!</h1>
+        <button class="boton-salir" (click)="salir()">Salir</button>
+    </div>
+
+    <div *ngIf="this.pulsarReserva && (this.horaNoSeleccionada || this.nombreCliente == '')">
+        <h1>¡ERROR!</h1>
+        <br>
+        <h2>Intentelo de nuevo</h2>
+        <br>
+        <h3>Asegurate de insertar bien la hora y el nombre del cliente</h3>
+        <button class="volver-button" (click)="this.pulsarReserva=false"><a>Volver a intentarlo</a></button>
     </div>
 </div>

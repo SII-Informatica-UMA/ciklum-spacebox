@@ -31,7 +31,10 @@ export class ListaReservasComponent{
   confirmacionCancelar: boolean = false
   reservaPendienteCancelar: Reserva = new Reserva(-1, '', '', -1, -1)
   cancelado: boolean = false
+  pulsarAnadir: boolean = false
 
+  nombreCliente: string = ''
+  
   private get rol() {
     return this.usuariosService.rolCentro;
   }

@@ -70,7 +70,7 @@ select {
     border-radius: 7px;
     margin-top: 10px;
     margin-bottom: 15px;
-    margin-left: 80pt;
+    margin-left: 30pt;
 }
 
 .boton-salir {
@@ -100,4 +100,23 @@ select {
 #no {
     margin-left: 10px;
     background-color: rgb(240, 85, 85);
+}
+
+.boton-editar {
+    text-align: center;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(33, 125, 201);
+    border-radius: 7px;
+    margin-left: 30px;
+}
+
+#boton-anadir {
+    text-align: center;
+    font-weight: bolder;
+    color: white;
+    background-color: rgb(23, 28, 29);
+    border-radius: 7px;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
