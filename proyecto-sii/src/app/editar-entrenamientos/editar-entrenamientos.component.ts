@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import moment from "moment";
 import { FormsModule } from '@angular/forms';
 import { Reserva } from "../reserva";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-editar-entrenamientos',
@@ -21,7 +22,6 @@ import { Reserva } from "../reserva";
      entrenamiento: any;
      horasDis: number[] = this.rellenarHoras();
      fecha: any; 
-     activeModal: any;
      horaSelec: string = ''
      confirmacionCancelar: boolean = false
      reservaPendienteCancelar: Reserva = new Reserva(-1, '', '', -1, -1)
@@ -29,7 +29,7 @@ import { Reserva } from "../reserva";
      pulsarReserva: boolean = false
      horaNoSeleccionada: boolean = true
     
-    constructor() {
+    constructor(public activeModal: NgbActiveModal) {
 
     }
 
