@@ -1,0 +1,15 @@
+<div>
+    <h1>Editar entrenamientos</h1>
+        <label for="entrenador">Hora Inicio:</label>
+        <select [(ngModel)]="horaSelec">
+            <option *ngFor="let hora of horasDis">
+                <span>{{convertir(hora)}}</span>
+            </option>
+        </select>
+        <br>
+        <label for="entrenador">Hora Fin:</label>
+        <br>
+        <button class="btn btn-primary" (click)="guardarEntrenamiento()">Guardar</button>
+        <br>
+        <button class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+</div> 

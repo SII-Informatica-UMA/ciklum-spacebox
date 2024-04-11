@@ -6,6 +6,8 @@ import { ListaReservasComponent } from '../lista-reservas/lista-reservas.compone
 import { Rol } from '../entities/login';
 import { UsuariosService } from "../services/usuarios.service";
 import { Reserva } from "../reserva";
+import { EditarEntrenamientosComponent } from "../editar-entrenamientos/editar-entrenamientos.component";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-entrenamientos',
@@ -19,20 +21,15 @@ import { Reserva } from "../reserva";
 
     entrenamientos: Reserva[] =  [new Reserva(7, 'cliente1', 'entrenador1', 8, Date.parse("28-5-2024")), new Reserva(8, 'cliente2', 'entrenador2', 9, Date.parse("27-5-2024"))]; 
     
-    constructor(private usuariosService: UsuariosService) {}
+    constructor(private usuariosService: UsuariosService, private modalService: NgbModal) {}
     
     get rol() {
         return this.usuariosService.rolCentro;
     }
 
     editarEntrenamiento(reserva: Reserva) {
-        for(let i = 0; i < this.entrenamientos.length; i++) {
-            if(this.entrenamientos[i] == reserva) {
-                this.entrenamientos[i]
-            }
-        }
+        let ref = this.modalService.open(EditarEntrenamientosComponent);
     }
-        
         
      eliminarEntrenamiento(reserva: Reserva) {
         for(let i = 0; i < this.entrenamientos.length; i++) {
