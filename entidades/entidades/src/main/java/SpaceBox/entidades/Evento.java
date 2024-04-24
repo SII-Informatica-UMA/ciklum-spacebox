@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 public class Evento  {
     @Id @GeneratedValue
     private int id ;
-    @Column(nullable = false    )
+    @Column(nullable = false)
     private String nombre ;
     @Column()
     private String descripcion	;
