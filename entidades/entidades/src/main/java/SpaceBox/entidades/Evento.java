@@ -8,9 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-
 public class Evento  {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
     private int id ;
     @Column(nullable = false)
     private String nombre ;

@@ -9,4 +9,5 @@ import SpaceBox.entidades.Evento  ;
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
 	List<Evento> findByNombreInicioAndIdCliente(String nombre, String inicio, int idCliente);
 	List<Evento> findByInicio(String inicio) ;
+	List<Evento> findByNombre(String nombre)  ;
 }
