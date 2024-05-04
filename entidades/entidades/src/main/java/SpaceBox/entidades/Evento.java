@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 @Entity
 public class Evento  {
     @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
-    private int id ;
+    private Integer id ;
     @Column(nullable = false)
     private String nombre ;
     @Column()
@@ -26,12 +26,12 @@ public class Evento  {
     @Column()
     private String reglaRecurrencia	;
     @Column()
-    private int idCliente ;
+    private Integer idCliente ;
     private enum Tipo	{ DISPONIBILIDAD , CITA }
     @Enumerated(EnumType.STRING)
     private Tipo tipo ;
 
-    public Evento(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, int idCliente, Tipo tipo,  int id) {
+    public Evento(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Tipo tipo,  int id) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.observaciones = observaciones;
@@ -71,7 +71,7 @@ public class Evento  {
         this.reglaRecurrencia = reglaRecurrencia;
     }
 
-    private void setIdCliente(int idCliente) {
+    private void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
 
@@ -79,7 +79,7 @@ public class Evento  {
         this.tipo = tipo;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -119,7 +119,7 @@ public class Evento  {
         return tipo ;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -150,6 +150,6 @@ public class Evento  {
 
     @Override
     public int hashCode() {
-        return this.id;
+        return this.id.intValue();
     }
 }
