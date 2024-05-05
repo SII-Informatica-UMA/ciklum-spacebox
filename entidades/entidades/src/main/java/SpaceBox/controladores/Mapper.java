@@ -3,8 +3,6 @@ import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 
-
-
 public class Mapper {
     public static EventoDTO toEventoDTO(Evento e){
         return EventoDTO.builder()

@@ -39,11 +39,27 @@ public class EventoService {
         }
     }
 
+    // Metodo asociado al GET /calendario/{idEntrenador}
+    // Objetivo: Consultar disponibilidad de un entrenador
+    // Resultados:
+    // - 200: Devuelve la lista con la disponibilidad del entrenador
+    // - 400: Bad request
+    // - 403: Acceso no autorizado
+    // - 404: No se ha encontrado el entrenador
+    public Optional<Evento> obtenerDisponibilidad(Integer idEntrenador) {
+       // TODO
+         return null;
+    }
+
     // Metodo asociado al POST /calendario/{idEntrenador}
+    // Objetivo: Crear un evento en el calendario de un entrenador. Lo puede hacer tanto un cliente como un entrenador. 
+    //                   El entrenador puede añadir franjas de disponibilidad
+    // Resultados:
+    // - 201: Se ha creado el evento
+    // - 400: Problemas en los parametros de entrada o solapamiento de alguna cita previa
+    // - 403: Acceso no autorizado
+    // - 404: No se ha encontrado el entrenador
     public void aniadirEvento(Integer idEntrenador, Evento e) {
-        if (repo.findById(e.getId()).isEmpty()) {
-            
-        }
-        
+        // TODO            
     }
 }

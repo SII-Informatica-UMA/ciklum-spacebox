@@ -2,7 +2,9 @@ package SpaceBox.controladores;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -58,13 +61,17 @@ public class ControladorRest {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Evento> addEvento(@RequestBody Evento even){
-        return null;
+    @GetMapping("{idEntrenador}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<List<Evento> > addEvento(@PathVariable(name = "idEntrenador") Integer idEntrenador){
+
+        return null ;
+
     }
 
     @PostMapping({"{idEntrenador}"})
-    public ResponseEntity<List<Evento>> getEventos(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseEntity<Evento> getEventos(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
 
         Evento e = Mapper.toEvento(en) ;
 
@@ -78,5 +85,4 @@ public class ControladorRest {
 
         return ResponseEntity.created(uri).build() ;
     }
-
 }
