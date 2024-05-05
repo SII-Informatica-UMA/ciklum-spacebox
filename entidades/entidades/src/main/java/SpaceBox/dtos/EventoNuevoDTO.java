@@ -1,15 +1,16 @@
+package SpaceBox.dtos;
 
 import lombok.* ;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @EqualsAndHashCode
 @ToString
 
 public class EventoNuevoDTO {
-    private Integer id ;
     private String nombre ;
     private String descripcion ;
     private String observaciones ;

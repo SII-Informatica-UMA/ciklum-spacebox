@@ -1,16 +1,21 @@
 package SpaceBox.controladores;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.servicios.EventoService;
 
@@ -53,6 +58,25 @@ public class ControladorRest {
         }
     }
 
-    
+    @PutMapping
+    public ResponseEntity<Evento> addEvento(@RequestBody Evento even){
+        return null;
+    }
+
+    @PostMapping({"{idEntrenador}"})
+    public ResponseEntity<List<Evento>> getEventos(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
+
+        Evento e = Mapper.toEvento(en) ;
+
+        service.aniadirEvento(idEntrenador, e) ;
+
+        URI uri =  builder
+            .path("/calenderario")
+            .path(String.format("%d", idEntrenador))
+            .build()
+            .toUri() ;
+
+        return ResponseEntity.created(uri).build() ;
+    }
 
 }

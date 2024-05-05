@@ -38,4 +38,12 @@ public class EventoService {
             return true;
         }
     }
+
+    // Metodo asociado al POST /calendario/{idEntrenador}
+    public void aniadirEvento(Integer idEntrenador, Evento e) {
+        if (repo.findById(e.getId()).isEmpty()) {
+            
+        }
+        
+    }
 }

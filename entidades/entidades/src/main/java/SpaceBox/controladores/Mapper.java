@@ -1,3 +1,9 @@
+package SpaceBox.controladores;
+import SpaceBox.dtos.EventoDTO;
+import SpaceBox.dtos.EventoNuevoDTO;
+import SpaceBox.entidades.Evento;
+
+
 
 public class Mapper {
     public static EventoDTO toEventoDTO(Evento e){
@@ -17,7 +23,6 @@ public class Mapper {
 
     public static Evento toEvento(EventoNuevoDTO e){
         return Evento.builder()
-                .id(e.getId())
                 .nombre(e.getNombre())
                 .descripcion(e.getDescripcion())
                 .observaciones(e.getObservaciones())

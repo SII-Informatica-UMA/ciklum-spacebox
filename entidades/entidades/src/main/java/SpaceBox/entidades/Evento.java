@@ -6,7 +6,12 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.* ;
 
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 public class Evento  {
     @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
