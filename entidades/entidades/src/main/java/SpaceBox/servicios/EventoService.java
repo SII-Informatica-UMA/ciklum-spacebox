@@ -23,4 +23,19 @@ public class EventoService {
     public Optional<Evento> getEventoById(Integer id) throws IllegalArgumentException{
         return repo.findById(id);
     }
+
+    
+    public Boolean eliminarEvento(Integer id) throws IllegalArgumentException {
+        EventoRepository aux = repo;
+
+        //deleteById no hace nada si no existe un Evento con el id especificado
+        repo.deleteById(id);
+
+        if(aux.findAll().size() == repo.findAll().size()){
+            //Quiere decir que no se ha borrado el elemento porque éste no existía
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
