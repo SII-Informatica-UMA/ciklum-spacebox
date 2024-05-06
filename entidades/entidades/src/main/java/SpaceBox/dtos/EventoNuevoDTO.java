@@ -1,5 +1,6 @@
 package SpaceBox.dtos;
 
+import SpaceBox.entidades.Tipo;
 import lombok.* ;
 
 @Getter
@@ -19,6 +20,5 @@ public class EventoNuevoDTO {
     private String inicio ;
     private String reglaRecurrencia ;
     private Integer idCliente ;
-    private enum Tipo { DISPONIBILIDAD, CITA }
     private Tipo tipo ;
 }

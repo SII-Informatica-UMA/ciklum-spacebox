@@ -1,12 +1,14 @@
 package SpaceBox.dtos;
 
+import SpaceBox.entidades.Tipo;
 import lombok.* ;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @EqualsAndHashCode
 @ToString
+@Builder
+
 
 public class EventoDTO {
     private Integer id ;
@@ -18,7 +20,6 @@ public class EventoDTO {
     private String inicio ;
     private String reglaRecurrencia ;
     private Integer idCliente ;
-    private enum Tipo { DISPONIBILIDAD, CITA }
     private Tipo tipo ;
 
     private void setNombre(String nombre) {

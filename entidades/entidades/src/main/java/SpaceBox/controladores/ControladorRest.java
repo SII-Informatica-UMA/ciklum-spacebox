@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.servicios.EventoService;
 
 @RestController
-@RequestMapping("/calendario/{idEntrenador}")
+@RequestMapping("/calendario")
 public class ControladorRest {
     private EventoService service;
 
@@ -33,8 +34,8 @@ public class ControladorRest {
 
     //Obtiene un evento concreto del calendario
     //FALTA ACCESO NO AUTORIZADO
-    @GetMapping("{idElemento}")
-    public ResponseEntity<Evento> getEventoById(@PathVariable(name="idElemento") Integer id){
+    @GetMapping("{idElemento}/{idEntrenador}")
+    public ResponseEntity<Evento> getEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name="idEntrenador") Integer idEntrenador){
         try {
             return ResponseEntity.of(service.getEventoById(id));
         } catch (IllegalArgumentException iae){
@@ -43,13 +44,13 @@ public class ControladorRest {
         
     }
 
-    @PutMapping("{idElemento}")
-    public ResponseEntity<Evento> updateEvento(@PathVariable(name="idElemento") Integer id, @RequestBody Evento even){
+    @PutMapping("{idElemento}/{idEntrenador}")
+    public ResponseEntity<Evento> updateEvento(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador")  @RequestBody Evento even){
         return null;
     }
 
-    @DeleteMapping("{idElemento}")
-    public ResponseEntity<Evento> deleteEventoById(@PathVariable(name="idElemento") Integer id){
+    @DeleteMapping("{idElemento}/{idEntrenador}")
+    public ResponseEntity<Evento> deleteEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador") Integer idEntrenador) {
         try {
             if(service.eliminarEvento(id)){
                 return ResponseEntity.ok().build();
@@ -63,15 +64,15 @@ public class ControladorRest {
 
     @GetMapping("{idEntrenador}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<List<Evento> > addEvento(@PathVariable(name = "idEntrenador") Integer idEntrenador){
-
-        return null ;
-
-    }
+    public ResponseEntity<List<EventoDTO> > getEvento(@PathVariable(name = "idEntrenador") Integer idEntrenador){
+        return ResponseEntity.ok(service.obtenerDisponibilidad(idEntrenador).stream()
+                    .map(Mapper:: toEventoDTO)
+                    .toList())   ; 
+     }
 
     @PostMapping({"{idEntrenador}"})
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<Evento> getEventos(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
+    public ResponseEntity<Evento> addEvento(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
 
         Evento e = Mapper.toEvento(en) ;
 

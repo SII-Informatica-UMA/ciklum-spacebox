@@ -11,4 +11,5 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 	List<Evento> findByInicio(String inicio) ;
 	List<Evento> findByNombre(String nombre)  ;
 	List<Evento> findByIdCliente(Integer idCliente) ;
+	List<Evento>findAllEventos() ;
 }

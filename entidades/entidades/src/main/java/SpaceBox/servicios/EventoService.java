@@ -1,11 +1,13 @@
 package SpaceBox.servicios;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import SpaceBox.entidades.Evento;
+import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
 import jakarta.transaction.Transactional;
 
@@ -43,12 +45,20 @@ public class EventoService {
     // Objetivo: Consultar disponibilidad de un entrenador
     // Resultados:
     // - 200: Devuelve la lista con la disponibilidad del entrenador
-    // - 400: Bad request
+    // - 400: Bad request (no se ha encontrado a un entrenador)
     // - 403: Acceso no autorizado
-    // - 404: No se ha encontrado el entrenador
-    public Optional<Evento> obtenerDisponibilidad(Integer idEntrenador) {
-       // TODO
-         return null;
+    // - 404: No se ha encontrado eventos de esas caracteristicas
+    public List<Evento>  obtenerDisponibilidad(Integer idEntrenador) {
+
+        List<Evento> l = repo.findAll();
+
+        if (l.isEmpty()) {
+            throw new EventoNoEncontradoException() ; 
+        } else {
+            
+        }
+
+         return l  ;
     }
 
     // Metodo asociado al POST /calendario/{idEntrenador}
@@ -60,6 +70,6 @@ public class EventoService {
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
     public void aniadirEvento(Integer idEntrenador, Evento e) {
-        // TODO            
+        
     }
 }

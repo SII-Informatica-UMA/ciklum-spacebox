@@ -32,7 +32,6 @@ public class Evento  {
     private String reglaRecurrencia	;
     @Column()
     private Integer idCliente ;
-    private enum Tipo	{ DISPONIBILIDAD , CITA }
     @Enumerated(EnumType.STRING)
     private Tipo tipo ;
 
