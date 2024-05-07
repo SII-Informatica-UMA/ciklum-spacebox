@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
+import SpaceBox.excepciones.EventoFallidoException;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
 import jakarta.transaction.Transactional;
@@ -54,12 +55,22 @@ public class EventoService {
     // - 404: No se ha encontrado eventos de esas caracteristicas
     public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
-        List<Evento> l = repo.findAll();
+        List<Evento> l = null ;
+        boolean ok = false ;
 
-        if (l.isEmpty()) {
-            throw new EventoNoEncontradoException() ; 
+        if (repo.findAll().isEmpty()) {
+            throw new EventoNoEncontradoException();
+        } else {
+            l = repo.findAll() ;
+            for (Evento evento : l) {
+                if (evento.getIdEntrenador() == idEntrenador) {
+                    ok = true ;
+                }
+            }
+            if (!ok) {
+                throw new EventoFallidoException() ;
+            }
         }
-
          return l;
     }
 
