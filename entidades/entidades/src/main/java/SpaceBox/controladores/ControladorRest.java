@@ -30,23 +30,18 @@ public class ControladorRest {
         this.service = es;
     }
 
-    //Obtiene un evento concreto del calendario
-    //FALTA ACCESO NO AUTORIZADO
     @GetMapping("{idEntrenador}/{idElemento}")
-    public ResponseEntity<Evento> getEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name="idEntrenador") Integer idEntrenador){
-        try {
-            return ResponseEntity.of(service.getEventoById(id));
-        } catch (IllegalArgumentException iae){
-            return ResponseEntity.badRequest().build();
-        }
-        
+    public Evento getEventoById(@PathVariable(name="idEntrenador") Integer idEntrenador, @PathVariable(name="idElemento") Integer idElemento){
+        return service.obtenerEvento(idEntrenador, idElemento) ;
     }
 
     @PutMapping("{idEntrenador}/{idElemento}")
-    public void updateEvento(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador")  @RequestBody EventoNuevoDTO even){
+    public ResponseEntity<?> updateEvento(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador")  @RequestBody EventoNuevoDTO even){
         Evento e = Mapper.toEvento(even);
         e.setId(id);
         service.actualizarEvento(e);
+        return ResponseEntity.ok().build();
+
     }
 
     @DeleteMapping("{idEntrenador}/{idElemento}")

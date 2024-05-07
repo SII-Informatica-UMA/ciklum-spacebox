@@ -1,7 +1,7 @@
 package SpaceBox.servicios;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,28 @@ public class EventoService {
         this.repo = rep;
     }
 
-    public Optional<Evento> getEventoById(Integer id) throws IllegalArgumentException{
-        return repo.findById(id);
-    }
+    public Evento obtenerEvento(Integer idEntrenador, Integer idElemento) {
+        Evento e = new Evento() ;
 
+        List<Evento> eventos = new ArrayList<>() ;
+        boolean ok = false ;
+
+        if (repo.findAll().isEmpty()) {
+            throw new EventoNoEncontradoException();
+        } else {
+            eventos = repo.findAll() ;
+            for (Evento evento : eventos) {
+                if (evento.getIdEntrenador() == idEntrenador && evento.getId() == idElemento) {
+                    ok = true ;
+                    e = evento ;
+                }
+            }
+            if (!ok) {
+                throw new EventoFallidoException() ;
+            }
+        }
+        return e ;
+    }
     
     public void eliminarEvento(Integer id) throws IllegalArgumentException {
         if(repo.existsById(id)){
@@ -55,16 +73,19 @@ public class EventoService {
     // - 404: No se ha encontrado eventos de esas caracteristicas
     public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
-        List<Evento> l = null ;
+        List<Evento> eventos = new ArrayList<>()  ;
+        List<Evento>  l = new ArrayList<>() ;
+        
         boolean ok = false ;
 
         if (repo.findAll().isEmpty()) {
             throw new EventoNoEncontradoException();
         } else {
-            l = repo.findAll() ;
-            for (Evento evento : l) {
+            eventos = repo.findAll() ;
+            for (Evento evento : eventos) {
                 if (evento.getIdEntrenador() == idEntrenador) {
                     ok = true ;
+                    l.add(evento) ;
                 }
             }
             if (!ok) {
@@ -85,6 +106,8 @@ public class EventoService {
     public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO e) {
         
     }
+
+
 
 
 }
