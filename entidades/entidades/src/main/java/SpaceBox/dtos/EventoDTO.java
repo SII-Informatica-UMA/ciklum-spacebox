@@ -22,39 +22,39 @@ public class EventoDTO {
     private Integer idCliente ;
     private Tipo tipo ;
 
-    private void setNombre(String nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    private void setDescripcion(String descripcion) {
+    public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
-    private void setObservaciones(String observaciones) {
+    public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
 
-    private void setLugar(String lugar) {
+    public void setLugar(String lugar) {
         this.lugar = lugar;
     }
 
-    private void setDuracionMinutos(int duracionMinutos) {
+    public void setDuracionMinutos(int duracionMinutos) {
         this.duracionMinutos = duracionMinutos;
     }
 
-    private void setInicio(String inicio) {
+    public void setInicio(String inicio) {
         this.inicio = inicio;
     }
 
-    private void setReglaRecurrencia(String reglaRecurrencia) {
+    public void setReglaRecurrencia(String reglaRecurrencia) {
         this.reglaRecurrencia = reglaRecurrencia;
     }
 
-    private void setIdCliente(Integer idCliente) {
+    public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
 
-    private void setTipo(Tipo tipo) {
+    public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
 

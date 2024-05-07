@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
@@ -41,6 +42,15 @@ public class EventoService {
         }
     }
 
+    public void actualizarEvento(Evento evento) throws IllegalArgumentException{
+       if(repo.existsById(evento.getId())){
+            repo.save(evento);
+       } else {
+            throw new EventoNoEncontradoException();
+       }
+        
+    }
+
     // Metodo asociado al GET /calendario/{idEntrenador}
     // Objetivo: Consultar disponibilidad de un entrenador
     // Resultados:
@@ -48,7 +58,7 @@ public class EventoService {
     // - 400: Bad request (no se ha encontrado a un entrenador)
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado eventos de esas caracteristicas
-    public List<Evento>  obtenerDisponibilidad(Integer idEntrenador) {
+    public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
         List<Evento> l = repo.findAll();
 
@@ -67,7 +77,9 @@ public class EventoService {
     // - 400: Problemas en los parametros de entrada o solapamiento de alguna cita previa
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
-    public void aniadirEvento(Integer idEntrenador, Evento e) {
+    public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO e) {
         
     }
+
+
 }
