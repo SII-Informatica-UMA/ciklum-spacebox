@@ -54,16 +54,8 @@ public class ControladorRest {
     }
 
     @DeleteMapping("{idEntrenador}/{idElemento}")
-    public ResponseEntity<Evento> deleteEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador") Integer idEntrenador) {
-        try {
-            if(service.eliminarEvento(id)){
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch(IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
-        }
+    public void deleteEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador") Integer idEntrenador) {
+        service.eliminarEvento(id);
     }
 
     @GetMapping("{idEntrenador}")
