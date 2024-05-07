@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
-import SpaceBox.excepciones.EventoFallidoException;
-import SpaceBox.excepciones.EventoNoAutorizadoException;
-import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.servicios.EventoService;
 
 @RestController
@@ -80,16 +76,4 @@ public class ControladorRest {
 
         return ResponseEntity.created(uri).build() ;
     }
-
-    @ExceptionHandler(EventoNoEncontradoException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void noEncontrado(){}
-
-    @ExceptionHandler(EventoFallidoException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void eventoFallido(){}
-
-    @ExceptionHandler(EventoNoAutorizadoException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public void faltaPermisos(){}
 }

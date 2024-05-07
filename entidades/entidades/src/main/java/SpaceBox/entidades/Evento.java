@@ -34,6 +34,8 @@ public class Evento  {
     private Integer idCliente ;
     @Enumerated(EnumType.STRING)
     private Tipo tipo ;
+    @Column()
+    private Integer idEntrenador ;
 
     public Evento(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Tipo tipo,  int id) {
         this.nombre = nombre;
@@ -79,6 +81,10 @@ public class Evento  {
         this.idCliente = idCliente;
     }
 
+    public void setIdEntrenador(Integer idEntrenador) {
+        this.idEntrenador = idEntrenador;
+    }
+
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
@@ -117,6 +123,10 @@ public class Evento  {
 
     public int getIdCliente() {
         return idCliente;
+    }
+
+    public int getIdEntrenador() {
+        return idEntrenador;
     }
 
     public Tipo getTipo() {
