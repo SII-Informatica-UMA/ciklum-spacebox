@@ -34,7 +34,7 @@ public class ControladorRest {
 
     //Obtiene un evento concreto del calendario
     //FALTA ACCESO NO AUTORIZADO
-    @GetMapping("{idElemento}/{idEntrenador}")
+    @GetMapping("{idEntrenador}/{idElemento}")
     public ResponseEntity<Evento> getEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name="idEntrenador") Integer idEntrenador){
         try {
             return ResponseEntity.of(service.getEventoById(id));
@@ -44,12 +44,12 @@ public class ControladorRest {
         
     }
 
-    @PutMapping("{idElemento}/{idEntrenador}")
+    @PutMapping("{idEntrenador}/{idElemento}")
     public ResponseEntity<Evento> updateEvento(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador")  @RequestBody Evento even){
         return null;
     }
 
-    @DeleteMapping("{idElemento}/{idEntrenador}")
+    @DeleteMapping("{idEntrenador}/{idElemento}")
     public ResponseEntity<Evento> deleteEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador") Integer idEntrenador) {
         try {
             if(service.eliminarEvento(id)){

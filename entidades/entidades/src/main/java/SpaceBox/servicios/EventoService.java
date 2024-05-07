@@ -54,11 +54,9 @@ public class EventoService {
 
         if (l.isEmpty()) {
             throw new EventoNoEncontradoException() ; 
-        } else {
-            
         }
 
-         return l  ;
+         return l;
     }
 
     // Metodo asociado al POST /calendario/{idEntrenador}
