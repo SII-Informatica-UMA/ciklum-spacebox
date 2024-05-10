@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
+import SpaceBox.excepciones.EventoFallidoException;
 import SpaceBox.servicios.EventoService;
 
 @RestController
@@ -61,14 +62,18 @@ public class ControladorRest {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<Evento> addEvento(@PathVariable(name = "idEntrenador") Integer idEntrenador, @RequestBody EventoNuevoDTO en, UriComponentsBuilder builder){
 
-        service.aniadirEvento(idEntrenador, en) ;
+        try {
+            service.aniadirEvento(idEntrenador, en) ;
 
-        URI uri =  builder
-            .path("/calenderario")
-            .path(String.format("%d", idEntrenador))
-            .build()
-            .toUri() ;
-
-        return ResponseEntity.created(uri).build() ;
+            URI uri =  builder
+                .path("/calenderario")
+                .path(String.format("%d", idEntrenador))
+                .build()
+                .toUri() ;
+    
+            return ResponseEntity.created(uri).build() ;
+        } catch (EventoFallidoException efe){
+            return ResponseEntity.notFound().build();
+        }
     }
 }

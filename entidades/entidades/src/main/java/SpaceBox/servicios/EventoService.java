@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import SpaceBox.controladores.Mapper;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.excepciones.EventoFallidoException;
@@ -103,8 +104,11 @@ public class EventoService {
     // - 400: Problemas en los parametros de entrada o solapamiento de alguna cita previa
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
-    public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO e) {
-        
+    public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
+        if(repo.findByIdEntrenador(idEntrenador) == null){
+            throw new EventoFallidoException();
+        }
+        repo.save(Mapper.toEvento(eventoNuevo));
     }
 
 
