@@ -42,15 +42,19 @@ public class EventoService {
         }
     }
     
-    public void eliminarEvento(Integer id) {
-        if(id > 0){
-            if(repo.existsById(id)){
-                repo.deleteById(id);
-            } else {
-                throw new EventoNoEncontradoException();
-            }
-        } else {
+    public void eliminarEvento(Integer id, Integer idEntrenador) {
+        if(id < 0 || idEntrenador < 0){
             throw new EventoFallidoException();
+        }
+
+        Optional<Evento> evento = repo.findById(id);
+
+        if(!evento.isPresent()){
+            throw new EventoNoEncontradoException();
+        } else if (evento.get().getIdEntrenador() != idEntrenador){
+            throw new EventoNoAutorizadoException();
+        } else {
+            repo.delete(evento.get());
         }
     }
 

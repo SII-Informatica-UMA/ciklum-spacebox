@@ -48,7 +48,7 @@ public class ControladorRest {
     @DeleteMapping("{idEntrenador}/{idElemento}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteEventoById(@PathVariable(name="idElemento") Integer id, @PathVariable(name = "idEntrenador") Integer idEntrenador) {
-        service.eliminarEvento(id);
+        service.eliminarEvento(id, idEntrenador);
     }
 
     @GetMapping("{idEntrenador}")
