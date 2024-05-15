@@ -1,7 +1,7 @@
 package SpaceBox.servicios;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +10,7 @@ import SpaceBox.controladores.Mapper;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.excepciones.EventoFallidoException;
+import SpaceBox.excepciones.EventoNoAutorizadoException;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
 import jakarta.transaction.Transactional;
@@ -26,42 +27,48 @@ public class EventoService {
     }
 
     public Evento obtenerEvento(Integer idEntrenador, Integer idElemento) {
-        Evento e = new Evento() ;
-
-        List<Evento> eventos = new ArrayList<>() ;
-        boolean ok = false ;
-
-        if (repo.findAll().isEmpty()) {
-            throw new EventoNoEncontradoException();
-        } else {
-            eventos = repo.findAll() ;
-            for (Evento evento : eventos) {
-                if (evento.getIdEntrenador() == idEntrenador && evento.getId() == idElemento) {
-                    ok = true ;
-                    e = evento ;
-                }
-            }
-            if (!ok) {
-                throw new EventoFallidoException() ;
-            }
+        if(idEntrenador < 0 || idElemento < 0){
+            throw new EventoFallidoException();
         }
-        return e ;
+
+        Optional<Evento> evento = repo.findById(idElemento);
+
+        if(!evento.isPresent()){
+            throw new EventoNoEncontradoException();
+        } else if(evento.get().getIdEntrenador() != idEntrenador){
+            throw new EventoNoAutorizadoException();
+        } else {
+            return evento.get();
+        }
     }
     
-    public void eliminarEvento(Integer id) throws IllegalArgumentException {
-        if(repo.existsById(id)){
-            repo.deleteById(id);
+    public void eliminarEvento(Integer id) {
+        if(id > 0){
+            if(repo.existsById(id)){
+                repo.deleteById(id);
+            } else {
+                throw new EventoNoEncontradoException();
+            }
         } else {
-            throw new EventoNoEncontradoException();
+            throw new EventoFallidoException();
         }
     }
 
-    public void actualizarEvento(Evento evento) throws IllegalArgumentException{
-       if(repo.existsById(evento.getId())){
-            repo.save(evento);
-       } else {
+    public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
+        if(id < 0 || idEntrenador < 0){
+            throw new EventoFallidoException();
+        }
+
+        Optional<Evento> evento = repo.findById(id);
+
+        if(!evento.isPresent()){
             throw new EventoNoEncontradoException();
-       }
+        } else if (evento.get().getIdEntrenador() != idEntrenador){
+            throw new EventoNoAutorizadoException();
+        } else {
+            repo.save(Mapper.toEvento(eventoNuevo));
+        }
+        
         
     }
 
@@ -74,26 +81,15 @@ public class EventoService {
     // - 404: No se ha encontrado eventos de esas caracteristicas
     public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
-        List<Evento> eventos = new ArrayList<>()  ;
-        List<Evento>  l = new ArrayList<>() ;
+        if(idEntrenador < 0){
+            throw new EventoFallidoException();
+        }
         
-        boolean ok = false ;
-
-        if (repo.findAll().isEmpty()) {
+        if (repo.findByIdEntrenador(idEntrenador).isEmpty()) {
             throw new EventoNoEncontradoException();
         } else {
-            eventos = repo.findAll() ;
-            for (Evento evento : eventos) {
-                if (evento.getIdEntrenador() == idEntrenador) {
-                    ok = true ;
-                    l.add(evento) ;
-                }
-            }
-            if (!ok) {
-                throw new EventoFallidoException() ;
-            }
+            return repo.findByIdEntrenador(idEntrenador);
         }
-         return l;
     }
 
     // Metodo asociado al POST /calendario/{idEntrenador}
@@ -105,9 +101,14 @@ public class EventoService {
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
     public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(repo.findByIdEntrenador(idEntrenador) == null){
+        if(idEntrenador < 0){
             throw new EventoFallidoException();
         }
+
+        if(repo.findByIdEntrenador(idEntrenador) == null){
+            throw new EventoNoEncontradoException();
+        }
+
         repo.save(Mapper.toEvento(eventoNuevo));
     }
 

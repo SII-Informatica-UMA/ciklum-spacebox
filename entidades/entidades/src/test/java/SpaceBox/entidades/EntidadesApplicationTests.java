@@ -204,5 +204,15 @@ class EntidadesApplicationTests {
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 		}
+
+		@Test
+		@DisplayName("se borra correctamente un evento")
+		public void borrarElementoCorrecto(){
+			var peticion = delete("http","localhost",port, "calendario/1/1");
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+		}
 	}
 }
