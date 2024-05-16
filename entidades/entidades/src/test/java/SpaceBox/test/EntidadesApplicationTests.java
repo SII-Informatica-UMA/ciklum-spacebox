@@ -1,10 +1,11 @@
-package SpaceBox.entidades;
+package SpaceBox.test;
 
 import SpaceBox.entidades.Evento;
-import SpaceBox.entidades.Tipo;
+//import SpaceBox.entidades.Evento;
+//import SpaceBox.entidades.Tipo;
 import SpaceBox.repositorios.EventoRepository;
-import SpaceBox.dtos.EventoDTO;
-import SpaceBox.dtos.EventoNuevoDTO;
+//import SpaceBox.dtos.EventoDTO;
+//import SpaceBox.dtos.EventoNuevoDTO;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,13 +26,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
+import org.springframework.test.context.ContextConfiguration;
+
 
 import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class EntidadesApplicationTests {
 
@@ -115,7 +122,6 @@ class EntidadesApplicationTests {
 
 	}
 	// --------------------------------------------------------------------------------------------------------------------
-
 	@Nested
 	@DisplayName("cuando hay eventos en la base de datos")
 	public class ConEventos {
