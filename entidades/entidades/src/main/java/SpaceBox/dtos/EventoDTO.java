@@ -21,6 +21,7 @@ public class EventoDTO {
     private String reglaRecurrencia ;
     private Integer idCliente ;
     private Tipo tipo ;
+    private Integer idEntrenador;
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -62,6 +63,10 @@ public class EventoDTO {
         this.id = id;
     }
 
+    public void setIdEntrenador(Integer id){
+        this.idEntrenador = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -100,5 +105,9 @@ public class EventoDTO {
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getIdEntrenador(){
+        return idEntrenador;
     }
 }

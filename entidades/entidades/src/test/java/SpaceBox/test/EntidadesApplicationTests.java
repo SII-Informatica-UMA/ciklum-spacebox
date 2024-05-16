@@ -1,5 +1,6 @@
 package SpaceBox.test;
 
+import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 //import SpaceBox.entidades.Evento;
 //import SpaceBox.entidades.Tipo;
@@ -129,11 +130,20 @@ class EntidadesApplicationTests {
 		@BeforeEach
 		public void inicializarBaseDeDatos() {
 			var Evento1 = new Evento();
+			Evento1.setId(1);
 			Evento1.setIdEntrenador(1);
+			Evento1.setIdCliente(1);
+			Evento1.setDescripcion("descripcion de evento 1");
 			var Evento2 = new Evento();
+			Evento2.setId(2);
 			Evento2.setIdEntrenador(1);
+			Evento2.setIdCliente(2);
+			Evento2.setDescripcion("descripcion de evento 2");
 			var Evento3 = new Evento();
+			Evento3.setId(3);
 			Evento3.setIdEntrenador(2);
+			Evento3.setIdCliente(3);
+			Evento3.setDescripcion("descripcion de evento 3");
 			
 			eventoRepository.save(Evento1);
 			eventoRepository.save(Evento2);
@@ -211,49 +221,102 @@ class EntidadesApplicationTests {
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 		}
 
-		@Test
-		@DisplayName("se borra correctamente un evento")
-		public void borrarEventoCorrecto(){
-			var peticion = delete("http","localhost",port, "calendario/1/1");
+		@Nested
+		public class BorrarEvento {
+				
+			@Test
+			@DisplayName("se borra correctamente un evento")
+			public void borrarEventoCorrecto(){
+				var peticion = delete("http","localhost",port, "calendario/1/1");
 
-			var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange(peticion, Void.class);
 
-			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
-			assertThat(eventoRepository.count()).isEqualTo(2);
-			assertThat(eventoRepository.findById(1)).isEmpty();
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+				assertThat(eventoRepository.count()).isEqualTo(2);
+				assertThat(eventoRepository.findById(1)).isEmpty();
+			}
+
+			@Test
+			@DisplayName("se intenta borrar un evento que no existe")
+			public void borrarEventoNoExistente(){
+				var peticion = delete("http","localhost",port, "calendario/1/13");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+				assertThat(eventoRepository.count()).isEqualTo(3);
+			}
+
+			@Test
+			@DisplayName("se intenta borrar un evento con id mal formulado")
+			public void borrarEventoMalId(){
+				var peticion = delete("http","localhost",port, "calendario/1/-1");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(eventoRepository.count()).isEqualTo(3);
+			}
+
+			@Test
+			@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
+			public void borrarEventoNoAutorizado(){
+				var peticion = delete("http","localhost",port, "calendario/100/1");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+				assertThat(eventoRepository.count()).isEqualTo(3);
+			}
 		}
 
-		@Test
-		@DisplayName("se intenta borrar un evento que no existe")
-		public void borrarEventoNoExistente(){
-			var peticion = delete("http","localhost",port, "calendario/1/13");
+		@Nested
+		public class ModificarEvento {
 
-			var respuesta = restTemplate.exchange(peticion, Void.class);
+			@Test
+			@DisplayName("se modifica un evento correctamente")
+			public void modificarEventoCorrectamente(){
+				EventoNuevoDTO nuevoEvento = new EventoNuevoDTO();
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
 
-			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-			assertThat(eventoRepository.count()).isEqualTo(3);
+				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("esta es la nueva descripcion del evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente()).isEqualTo(10);
+			}
 		}
 
-		@Test
-		@DisplayName("se intenta borrar un evento con id mal formulado")
-		public void borrarEventoMalId(){
-			var peticion = delete("http","localhost",port, "calendario/1/-1");
-
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-
-			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-			assertThat(eventoRepository.count()).isEqualTo(3);
-		}
-
-		@Test
-		@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
-		public void borrarEventoNoAutorizado(){
-			var peticion = delete("http","localhost",port, "calendario/100/-1");
-
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-
-			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-			assertThat(eventoRepository.count()).isEqualTo(3);
-		}
 	}
 }
+
+/*
+		@BeforeEach
+		public void inicializarBaseDeDatos() {
+			var Evento1 = new Evento();
+			Evento1.setId(1);
+			Evento1.setIdEntrenador(1);
+			Evento1.setIdCliente(1);
+			Evento1.setDescripcion("descripcion de evento 1");
+			var Evento2 = new Evento();
+			Evento2.setId(2);
+			Evento2.setIdEntrenador(1);
+			Evento2.setIdCliente(2);
+			Evento2.setDescripcion("descripcion de evento 2");
+			var Evento3 = new Evento();
+			Evento3.setId(3);
+			Evento3.setIdEntrenador(2);
+			Evento3.setIdCliente(3);
+			Evento3.setDescripcion("descripcion de evento 3");
+			
+			eventoRepository.save(Evento1);
+			eventoRepository.save(Evento2);
+			eventoRepository.save(Evento3);
+
+		}
+ */

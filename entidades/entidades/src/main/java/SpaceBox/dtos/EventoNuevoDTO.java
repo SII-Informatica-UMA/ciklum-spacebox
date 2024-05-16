@@ -21,4 +21,5 @@ public class EventoNuevoDTO {
     private String reglaRecurrencia ;
     private Integer idCliente ;
     private Tipo tipo ;
+    private Integer idEntrenador;
 }
