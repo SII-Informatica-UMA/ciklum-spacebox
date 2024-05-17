@@ -8,7 +8,7 @@ import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
 
-
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -273,10 +273,17 @@ class EntidadesApplicationTests {
 		@Nested
 		public class ModificarEvento {
 
+			private EventoNuevoDTO nuevoEvento;
+
+			@BeforeEach
+			public void inicializarNuevoEvento(){
+				nuevoEvento = new EventoNuevoDTO();
+			}
+
 			@Test
 			@DisplayName("se modifica un evento correctamente")
 			public void modificarEventoCorrectamente(){
-				EventoNuevoDTO nuevoEvento = new EventoNuevoDTO();
+				
 				nuevoEvento.setIdEntrenador(1);
 				nuevoEvento.setIdCliente(10);
 				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
@@ -289,6 +296,114 @@ class EntidadesApplicationTests {
 				assertThat(eventoRepository.findById(1).get().getDescripcion())
 				.isEqualTo("esta es la nueva descripcion del evento 1");
 				assertThat(eventoRepository.findById(1).get().getIdCliente()).isEqualTo(10);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar un evento con un id de entrandor mal formulado")
+			public void modificarEventoIdEntrenadorErroneo(){
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http","localhost",port,"calendario/-5/1", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar un evento con un id de evento mal formulado")
+			public void modificarEventoIdEventoErroneo(){
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http","localhost",port,"calendario/1/-1", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar el evento con un nuevo id de entrenador mal formado")
+			public void modificarEventoIdEntrenadorNuevoEventoErroneo(){
+				nuevoEvento.setIdEntrenador(-1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar el evento con un nuevo id de cliente mal formado")
+			public void modificarEventoIdClienteNuevoEventoErroneo(){
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(-10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar un evento sobre el que no se tienen permisos")
+			public void modificarEventoSinPermisos(){
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http", "localhost", port, "calendario/14/2", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
+
+			@Test
+			@DisplayName("se intenta modificar un evento que no existe")
+			public void modificarEventoNoExistente(){
+				nuevoEvento.setIdEntrenador(1);
+				nuevoEvento.setIdCliente(10);
+				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+
+				var peticion = put("http", "localhost", port, "calendario/1/102", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
 			}
 		}
 

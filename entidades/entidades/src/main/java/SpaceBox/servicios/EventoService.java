@@ -58,8 +58,13 @@ public class EventoService {
         }
     }
 
+    //Devuelve TRUE si el evento nuevo tiene IDs de entrenador o cliente mal formulados
+    private boolean comprobarEventoNuevo(EventoNuevoDTO eventoNuevo){
+        return eventoNuevo.getIdCliente() < 0 || eventoNuevo.getIdEntrenador() < 0;
+    }
+
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(id < 0 || idEntrenador < 0){
+        if(id < 0 || idEntrenador < 0 || comprobarEventoNuevo(eventoNuevo)){
             throw new EventoFallidoException();
         }
 
