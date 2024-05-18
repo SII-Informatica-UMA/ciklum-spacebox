@@ -8,7 +8,6 @@ import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
@@ -121,6 +119,21 @@ class EntidadesApplicationTests {
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
 
+		@Nested
+		@DisplayName("publicar evento con la base de datos vacia")
+		public class PostEvento{
+
+			@Test
+			@DisplayName("y se publica correctamente")
+			public void publicarEventoCorrecto(){
+				var peticion = post("http", "localhost", port, "/calendario/1", null);
+
+				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Evento>() {});
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+			}
+		}
+
 	}
 	// --------------------------------------------------------------------------------------------------------------------
 	@Nested
@@ -128,7 +141,7 @@ class EntidadesApplicationTests {
 	public class ConEventos {
 
 		@BeforeEach
-		public void inicializarBaseDeDatos() {
+		public void inicializarBaseDeDatosConEventos() {
 			var Evento1 = new Evento();
 			Evento1.setId(1);
 			Evento1.setIdEntrenador(1);
