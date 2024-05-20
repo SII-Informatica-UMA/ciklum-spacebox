@@ -1,5 +1,7 @@
 package SpaceBox.entidades;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +15,7 @@ import lombok.* ;
 @NoArgsConstructor
 @Builder
 @Entity
+@SpringBootApplication
 public class Evento  {
     @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
     private Integer id ;

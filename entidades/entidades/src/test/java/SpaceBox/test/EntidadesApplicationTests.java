@@ -15,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
@@ -33,9 +35,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootConfiguration
+@SpringBootApplication
+@MockBean(EventoRepository.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class EntidadesApplicationTests {
 
@@ -126,7 +128,9 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y se publica correctamente")
 			public void publicarEventoCorrecto(){
-				var peticion = post("http", "localhost", port, "/calendario/1", null);
+				var nuevoEvento = new EventoNuevoDTO();
+
+				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento );
 
 				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Evento>() {});
 

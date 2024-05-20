@@ -24,7 +24,7 @@ public class LineaComandos implements CommandLineRunner {
 		}
 
 		if (args.length > 0) {
-			for (Evento b: repository.findByNombreInicioAndIdCliente(args[0], args[1], Integer.parseInt(args[2]))) {
+			for (Evento b: repository.findByNombreAndInicioAndIdCliente(args[0], args[1], Integer.parseInt(args[2]))) {
 				System.out.println(b);
 			}
 		}
