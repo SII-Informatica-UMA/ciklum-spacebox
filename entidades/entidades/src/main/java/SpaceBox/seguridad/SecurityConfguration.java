@@ -25,13 +25,12 @@ public class SecurityConfguration {
         return new BCryptPasswordEncoder();
     }
 
+    @SuppressWarnings("deprecation")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(cs -> cs.disable())
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .anyRequest().authenticated()
+                .authorizeRequests(authorizeRequests -> authorizeRequests .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement
