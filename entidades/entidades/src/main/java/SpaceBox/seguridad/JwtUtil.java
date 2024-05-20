@@ -33,10 +33,13 @@ package SpaceBox.seguridad;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -121,5 +124,10 @@ public class JwtUtil {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public UserDetails createUserDetails(String username, String password, List<String> r) {
+         List<SimpleGrantedAuthority> authorities = r.stream().map(SimpleGrantedAuthority::new).toList();
+        return new User(username, password, authorities) ;
     }
 }

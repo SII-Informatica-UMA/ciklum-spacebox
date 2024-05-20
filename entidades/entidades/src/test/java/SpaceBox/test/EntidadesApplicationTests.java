@@ -1,5 +1,6 @@
 package SpaceBox.test;
 
+import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 //import SpaceBox.entidades.Evento;
@@ -7,6 +8,7 @@ import SpaceBox.entidades.Evento;
 import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
+import SpaceBox.seguridad.JwtUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
@@ -46,13 +50,20 @@ class EntidadesApplicationTests {
 
     @Value(value = "${local.server.port}")
     private int port;
-
+	
 	@Autowired
 	private EventoRepository eventoRepository;
+
+	@Autowired
+	private JwtUtil jwtUtil;
+	private UserDetails userDetails;
+	private String token;
 
 	@BeforeEach
 	public void inicializarBaseDeDatos() {
 		eventoRepository.deleteAll();
+		userDetails = jwtUtil.createUserDetails("1", "", List.of("ROLE_USER")) ;
+		token = jwtUtil.generateToken(userDetails) ;
 	}
 
 	 private URI uri(String scheme, String host, int port, String... paths) {
@@ -70,6 +81,7 @@ class EntidadesApplicationTests {
         URI uri = uri(scheme, host, port, path);
         var peticion = RequestEntity.get(uri)
             .accept(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + token)
             .build();
         return peticion;
     }
@@ -106,7 +118,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoNoExistente() {
 			var peticion = get("http",  "localhost", port, "/calendario/1/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<Evento>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
