@@ -109,14 +109,28 @@ class EntidadesApplicationTests {
         return peticion;
     }
 
+
+	// ----------------------------------------- CLASE NO HAY EVENTOS EN LA BD
 	@Nested
 	@DisplayName("cuando no hay eventos")
 	public class SinEventos {
 		
+		// ------------------------------------------------ METODOS GET
+
 		@Test
 		@DisplayName("no se obtienen eventos porque no los hay")
 		public void obtenerEventoNoExistente() {
-			var peticion = get("http",  "localhost", port, "/calendario/1/1");
+			var peticion = get("http",  "localhost", port, "/calendario/1/10");
+
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		}
+
+		@Test
+		@DisplayName("no se obtienen eventos porque no los hay")
+		public void obtenerEventoNoExisteEntrenador() {
+			var peticion = get("http",  "localhost", port, "/calendario/10/1");
 
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
 
@@ -126,32 +140,85 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("no se obtiene disponibilidad porque no existe el entrenador")
 		public void  obtenerDisponibilidadNoExistente() {
-			var peticion = get("http", "localhost", port, "/calendario/1") ;
+			var peticion = get("http", "localhost", port, "/calendario/10") ;
 
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
 
-		@Nested
-		@DisplayName("publicar evento con la base de datos vacia")
-		public class PostEvento{
+		// --------------------------------------------  METODOS POST
 
-			@Test
-			@DisplayName("y se publica correctamente")
-			public void publicarEventoCorrecto(){
-				var nuevoEvento = new EventoNuevoDTO();
+		@Test
+		@DisplayName("se crea evento correctamente")
+		public void publicarEventoCorrecto(){
+			var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("descripcion de evento 1")
+				.build();
+		
+			var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+		
+			var respuesta = restTemplate.exchange(peticion,Void.class);
+		
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		}
 
-				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento );
 
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+		// ------------------------------------------------ METODOS DELETE
 
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-			}
+		@Test
+		@DisplayName("se intenta borrar un evento que no existe")
+		public void borrarEventoNoExistente(){
+
+			var peticion = delete("http","localhost",port, "/calendario/1/1");
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		}
+
+		// ------------------------------------------------ METODOS PUT
+
+		@Test
+		@DisplayName("se intenta modificar un evento que no existe")
+		public void modificarEventoNoExistente(){
+			var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("descripcion de evento 1")
+				.build();
+
+			var peticion = put("http", "localhost", port, "calendario/1/10", nuevoEvento);
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		}
+
+		@Test
+		@DisplayName("se intenta modificar evento y el entrenador no existe")
+		public void modificarEventoNoExisteEntrenador(){
+			var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("descripcion de evento 1")
+				.build();
+
+			var peticion = put("http", "localhost", port, "calendario/5/1", nuevoEvento);
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
 
 	}
-	// --------------------------------------------------------------------------------------------------------------------
+	// ------------------------------------------FIN CLASE BD SIN EVENTOS
+
+
+
+	// ----------------------------------------- CLASE CON EVENTOS EN LA BD
 	@Nested
 	@DisplayName("cuando hay eventos en la base de datos")
 	public class ConEventos {
@@ -180,12 +247,15 @@ class EntidadesApplicationTests {
 
 		}
 
+		// ------------------------------------------------ METODO GET
+
 		@Test
 		@DisplayName("se obtiene un evento concreto del entrenador")
 		public void obtenerEvento() {
+			
 			var peticion = get("http",  "localhost", port, "/calendario/1/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 		}
@@ -250,53 +320,41 @@ class EntidadesApplicationTests {
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 		}
 
-		@Nested
-		public class BorrarEvento {
-				
-			@Test
-			@DisplayName("se borra correctamente un evento")
-			public void borrarEventoCorrecto(){
-				var peticion = delete("http","localhost",port, "calendario/1/1");
+		// ------------------------------------------------ METODO DELETE
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
-				assertThat(eventoRepository.count()).isEqualTo(2);
-				assertThat(eventoRepository.findById(1)).isEmpty();
-			}
+		@Test
+		@DisplayName("se borra correctamente un evento")
+		public void borrarEventoCorrecto(){
+			var peticion = delete("http","localhost",port, "calendario/1/1");
 
-			@Test
-			@DisplayName("se intenta borrar un evento que no existe")
-			public void borrarEventoNoExistente(){
-				var peticion = delete("http","localhost",port, "calendario/1/13");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+			assertThat(eventoRepository.count()).isEqualTo(2);
+			assertThat(eventoRepository.findById(1)).isEmpty();
+		}
 
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-				assertThat(eventoRepository.count()).isEqualTo(3);
-			}
+		@Test
+		@DisplayName("se intenta borrar un evento con id mal formulado")
+		public void borrarEventoMalId(){
+			var peticion = delete("http","localhost",port, "calendario/1/-1");
 
-			@Test
-			@DisplayName("se intenta borrar un evento con id mal formulado")
-			public void borrarEventoMalId(){
-				var peticion = delete("http","localhost",port, "calendario/1/-1");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			assertThat(eventoRepository.count()).isEqualTo(3);
+		}
 
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertThat(eventoRepository.count()).isEqualTo(3);
-			}
+		@Test
+		@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
+		public void borrarEventoNoAutorizado(){
+			var peticion = delete("http","localhost",port, "calendario/100/1");
 
-			@Test
-			@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
-			public void borrarEventoNoAutorizado(){
-				var peticion = delete("http","localhost",port, "calendario/100/1");
+			var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-				assertThat(eventoRepository.count()).isEqualTo(3);
-			}
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+			assertThat(eventoRepository.count()).isEqualTo(3);
 		}
 
 		@Nested
@@ -417,23 +475,6 @@ class EntidadesApplicationTests {
 				.isEqualTo(1);
 			}
 
-			@Test
-			@DisplayName("se intenta modificar un evento que no existe")
-			public void modificarEventoNoExistente(){
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
-
-				var peticion = put("http", "localhost", port, "calendario/1/102", nuevoEvento);
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-				assertThat(eventoRepository.findById(1).get().getDescripcion())
-				.isEqualTo("descripcion de evento 1");
-				assertThat(eventoRepository.findById(1).get().getIdCliente())
-				.isEqualTo(1);
-			}
 		}
 
 	}
