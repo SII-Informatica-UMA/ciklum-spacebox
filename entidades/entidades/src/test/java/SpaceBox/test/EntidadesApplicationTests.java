@@ -122,7 +122,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoNoExistente() {
 			var peticion = get("http",  "localhost", port, "/calendario/1/10");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
@@ -132,7 +132,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoNoExisteEntrenador() {
 			var peticion = get("http",  "localhost", port, "/calendario/10/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
@@ -142,7 +142,7 @@ class EntidadesApplicationTests {
 		public void  obtenerDisponibilidadNoExistente() {
 			var peticion = get("http", "localhost", port, "/calendario/10") ;
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		}
@@ -265,7 +265,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoNoAutorizado() {
 			var peticion = get("http",  "localhost", port, "/calendario/1/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 		}
@@ -275,7 +275,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoMalaPeticion1() {
 			var peticion = get("http",  "localhost", port, "/calendario/3/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 		}
@@ -285,7 +285,7 @@ class EntidadesApplicationTests {
 		public void obtenerEventoMalaPeticion2() {
 			var peticion = get("http",  "localhost", port, "/calendario/1/3");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 		}
@@ -295,7 +295,7 @@ class EntidadesApplicationTests {
 		public void  obtenerDisponibilidad() {
 			var peticion = get("http", "localhost", port, "/calendario/1") ;
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 		}
@@ -305,7 +305,7 @@ class EntidadesApplicationTests {
 		public void  obtenerDisponibilidadMalaPeticion() {
 			var peticion = get("http", "localhost", port, "/calendario/3") ;
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 		}
@@ -315,7 +315,7 @@ class EntidadesApplicationTests {
 		public void  obtenerDisponibilidadNoExistente() {
 			var peticion = get("http", "localhost", port, "/calendario/1") ;
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 		}
