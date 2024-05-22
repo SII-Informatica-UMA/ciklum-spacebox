@@ -1,5 +1,6 @@
 package SpaceBox.test;
 
+import SpaceBox.EntidadesApplication;
 import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
@@ -22,11 +23,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -35,9 +38,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootApplication
-@MockBean(EventoRepository.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = EntidadesApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class EntidadesApplicationTests {
 
@@ -50,7 +51,7 @@ class EntidadesApplicationTests {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	@MockBean
+	@Autowired
 	private JwtUtil jwtUtil;
 	private UserDetails userDetails;
 	private String token;
@@ -85,6 +86,7 @@ class EntidadesApplicationTests {
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
         var peticion = RequestEntity.delete(uri)
+			.header("Authorization", "Bearer " + token)
             .build();
         return peticion;
     }
@@ -93,6 +95,7 @@ class EntidadesApplicationTests {
         URI uri = uri(scheme, host, port, path);
         var peticion = RequestEntity.post(uri)
             .contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + token)
             .body(object);
         return peticion;
     }
@@ -101,6 +104,7 @@ class EntidadesApplicationTests {
         URI uri = uri(scheme, host, port, path);
         var peticion = RequestEntity.put(uri)
             .contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + token)
             .body(object);
         return peticion;
     }

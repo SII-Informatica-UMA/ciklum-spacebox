@@ -1,6 +1,7 @@
 package SpaceBox.entidades;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.* ;
 @NoArgsConstructor
 @Builder
 @Entity
-@SpringBootApplication
+@ComponentScan(basePackages = "SpaceBox")
 public class Evento  {
     @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
     private Integer id ;
