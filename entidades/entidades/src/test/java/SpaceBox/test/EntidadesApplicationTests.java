@@ -370,7 +370,7 @@ class EntidadesApplicationTests {
 
 			private EventoNuevoDTO nuevoEvento;
 
-			@BeforeEach
+			//@BeforeEach
 			public void inicializarNuevoEvento(){
 				nuevoEvento = new EventoNuevoDTO("evento1", "esta es la nueva descripcion del evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 10, Tipo.CITA, 1);
 			}
@@ -378,6 +378,13 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se modifica un evento correctamente")
 			public void modificarEventoCorrectamente(){
+
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
+
 				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
