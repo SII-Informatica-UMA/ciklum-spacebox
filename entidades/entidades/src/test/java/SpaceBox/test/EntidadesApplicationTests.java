@@ -153,11 +153,7 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("se crea evento correctamente")
 		public void publicarEventoCorrecto(){
-			var nuevoEvento = EventoNuevoDTO.builder()
-				.idEntrenador(1)
-				.idCliente(1)
-				.descripcion("descripcion de evento 1")
-				.build();
+			var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 		
 			var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
 		
@@ -201,11 +197,7 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("se intenta modificar evento y el entrenador no existe")
 		public void modificarEventoNoExisteEntrenador(){
-			var nuevoEvento = EventoNuevoDTO.builder()
-				.idEntrenador(1)
-				.idCliente(1)
-				.descripcion("descripcion de evento 1")
-				.build();
+			var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 
 			var peticion = put("http", "localhost", port, "calendario/5/1", nuevoEvento);
 
