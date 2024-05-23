@@ -5,11 +5,12 @@ import SpaceBox.dtos.EventoDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 //import SpaceBox.entidades.Evento;
-//import SpaceBox.entidades.Tipo;
+import SpaceBox.entidades.Tipo;
 import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.seguridad.JwtUtil;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -225,28 +226,17 @@ class EntidadesApplicationTests {
 
 		@BeforeEach
 		public void inicializarBaseDeDatosConEventos() {
-			var Evento1 = new Evento();
-			Evento1.setId(1);
-			Evento1.setIdEntrenador(1);
-			Evento1.setIdCliente(1);
-			Evento1.setDescripcion("descripcion de evento 1");
-			var Evento2 = new Evento();
-			Evento2.setId(2);
-			Evento2.setIdEntrenador(1);
-			Evento2.setIdCliente(2);
-			Evento2.setDescripcion("descripcion de evento 2");
-			var Evento3 = new Evento();
-			Evento3.setId(3);
-			Evento3.setIdEntrenador(2);
-			Evento3.setIdCliente(3);
-			Evento3.setDescripcion("descripcion de evento 3");
+
+			var Evento1 = new Evento("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, 1, Tipo.CITA, 1);
+			var Evento2 = new Evento("evento2", "descripcion de evento 2", "observaciones 2", "lugar 2", 2, "inicio 2", "regla de recurrencia 2", 1, 2, Tipo.CITA, 2);
+			var Evento3 = new Evento("evento3", "descripcion de evento 3", "observaciones 3", "lugar 3", 3, "inicio 3", "regla de recurrencia 3", 2, 3, Tipo.CITA, 3);
 			
+
 			eventoRepository.save(Evento1);
 			eventoRepository.save(Evento2);
 			eventoRepository.save(Evento3);
-
 		}
-
+		//(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Integer idEntrenador, Tipo tipo,  int id)
 		// ------------------------------------------------ METODO GET
 
 		@Test
@@ -255,7 +245,7 @@ class EntidadesApplicationTests {
 			
 			var peticion = get("http",  "localhost", port, "/calendario/1/1");
 
-			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Evento>() {});
 
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 		}
@@ -263,7 +253,7 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("no se obtiene el evento porque no se esta autorizado")
 		public void obtenerEventoNoAutorizado() {
-			var peticion = get("http",  "localhost", port, "/calendario/1/1");
+			var peticion = get("http",  "localhost", port, "/calendario/5/1");
 
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
@@ -273,7 +263,7 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("no se obtiene el evento porque el id de entrenador es erroneo")
 		public void obtenerEventoMalaPeticion1() {
-			var peticion = get("http",  "localhost", port, "/calendario/3/1");
+			var peticion = get("http",  "localhost", port, "/calendario/-3/1");
 
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
@@ -364,17 +354,12 @@ class EntidadesApplicationTests {
 
 			@BeforeEach
 			public void inicializarNuevoEvento(){
-				nuevoEvento = new EventoNuevoDTO();
+				nuevoEvento = new EventoNuevoDTO("evento1", "esta es la nueva descripcion del evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 10, Tipo.CITA, 1);
 			}
 
 			@Test
 			@DisplayName("se modifica un evento correctamente")
 			public void modificarEventoCorrectamente(){
-				
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
-
 				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);

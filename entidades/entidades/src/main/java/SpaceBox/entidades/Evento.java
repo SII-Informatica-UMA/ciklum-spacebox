@@ -33,7 +33,7 @@ public class Evento  {
     @Column(nullable = false)
     private String inicio ;
     @Column()
-    private String reglaRecurrencia	;
+    private String reglaRecurrencia;
     @Column()
     private Integer idCliente ;
     @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class Evento  {
     @Column()
     private Integer idEntrenador ;
 
-    public Evento(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Tipo tipo,  int id) {
+    public Evento(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Integer idEntrenador, Tipo tipo,  int id) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.observaciones = observaciones;
@@ -51,6 +51,7 @@ public class Evento  {
         this.reglaRecurrencia = reglaRecurrencia;
         this.idCliente = idCliente;
         this.tipo = tipo;
+        this.idEntrenador = idEntrenador;
     }
 
     public void setNombre(String nombre) {
