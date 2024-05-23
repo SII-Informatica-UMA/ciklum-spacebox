@@ -169,7 +169,18 @@ class EntidadesApplicationTests {
 		@DisplayName("se intenta borrar un evento que no existe")
 		public void borrarEventoNoExistente(){
 
-			var peticion = delete("http","localhost",port, "/calendario/1/1");
+			var peticion = delete("http","localhost",port, "/calendario/1/5");
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		}
+
+		@Test
+		@DisplayName("se intenta borrar un evento para el que no existe el entrenador introducido")
+		public void borrarEventoNoExisteEntrenador(){
+
+			var peticion = delete("http","localhost",port, "/calendario/5/1");
 
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -229,6 +240,8 @@ class EntidadesApplicationTests {
 			eventoRepository.save(Evento3);
 		}
 		//(String nombre, String descripcion, String observaciones, String lugar, int duracionMinutos, String inicio, String reglaRecurrencia, Integer idCliente, Integer idEntrenador, Tipo tipo,  int id)
+
+
 		// ------------------------------------------------ METODO GET
 
 		@Test
@@ -265,7 +278,7 @@ class EntidadesApplicationTests {
 		@Test
 		@DisplayName("no se obtiene el evento porque el id de entrenamientoes erroneo")
 		public void obtenerEventoMalaPeticion2() {
-			var peticion = get("http",  "localhost", port, "/calendario/1/3");
+			var peticion = get("http",  "localhost", port, "/calendario/1/-3");
 
 			var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 
@@ -329,6 +342,17 @@ class EntidadesApplicationTests {
 		}
 
 		@Test
+		@DisplayName("se intenta borrar un evento con id de entrenador mal formulado")
+		public void borrarEventoMalIdEntrenador(){
+			var peticion = delete("http","localhost",port, "calendario/-1/1");
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			assertThat(eventoRepository.count()).isEqualTo(3);
+		}
+
+		@Test
 		@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
 		public void borrarEventoNoAutorizado(){
 			var peticion = delete("http","localhost",port, "calendario/100/1");
@@ -338,6 +362,8 @@ class EntidadesApplicationTests {
 			assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			assertThat(eventoRepository.count()).isEqualTo(3);
 		}
+
+		// ------------------------------------------------ METODO PUT
 
 		@Nested
 		public class ModificarEvento {
@@ -451,6 +477,10 @@ class EntidadesApplicationTests {
 				assertThat(eventoRepository.findById(1).get().getIdCliente())
 				.isEqualTo(1);
 			}
+
+			// ------------------------------------------------ METODO POST
+
+
 
 		}
 
