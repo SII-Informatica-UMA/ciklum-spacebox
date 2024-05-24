@@ -3,25 +3,41 @@ package SpaceBox.servicios;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import SpaceBox.controladores.Mapper;
+import SpaceBox.dtos.ClienteDTO;
+import SpaceBox.dtos.EntrenadorDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.excepciones.EventoFallidoException;
 import SpaceBox.excepciones.EventoNoAutorizadoException;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
+import SpaceBox.seguridad.JwtUtil;
+import SpaceBox.seguridad.SecurityConfguration;
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
 public class EventoService {
-    @Autowired
+
     private EventoRepository repo;
 
-    @Autowired 
+//    @Autowired
+//    private RestTemplate restTemplate;
+
+    @Autowired
+    private JwtUtil jwt ;
+
     public EventoService (EventoRepository rep){
         this.repo = rep;
     }
@@ -41,17 +57,48 @@ public class EventoService {
     }
     
     public void eliminarEvento(Integer id, Integer idEntrenador) {
+/*       try {
         if(id < 0 || idEntrenador < 0){
             throw new EventoFallidoException();
-        }
+        }  else {
 
-        Optional<Evento> evento = repo.findById(id);
+            String url = "http://localhost:8080/entrenador/" + idEntrenador ;
+            HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+            
+            ResponseEntity<EntrenadorDTO> respuestaEntrenador = restTemplate.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+            ResponseEntity<ClienteDTO> respuestaCliente = restTemplate.exchange(url, HttpMethod.GET, entity, ClienteDTO.class);
 
-        if(!evento.isPresent()){
-            throw new EventoNoEncontradoException();
-        } else {
-            repo.delete(evento.get());
+            if (respuestaEntrenador.getBody().getIdUsuario().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+
+                Optional<Evento> evento = repo.findById(id);
+    
+                if(!evento.isPresent()){
+                    throw new EventoNoEncontradoException();
+                } else {
+                    repo.delete(evento.get());
+                }
+
+            } else if (respuestaCliente.getBody().getIdUsuario().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+      
+                Optional<Evento> evento = repo.findById(id);
+    
+                if(!evento.isPresent()){
+                    throw new EventoNoEncontradoException();
+                } else {
+                    if (evento.get().getIdCliente() != respuestaCliente.getBody().getIdUsuario()) {
+                        throw new EventoNoAutorizadoException();
+                    } else {
+                        repo.delete(evento.get());
+                    }
+                }
+            } else {
+                throw new EventoNoAutorizadoException();
+            }
         }
+       } catch (HttpClientErrorException e) {
+              throw new EventoNoEncontradoException();
+       }
+*/
     }
 
     //Devuelve TRUE si el evento nuevo tiene IDs de entrenador o cliente mal formulados
