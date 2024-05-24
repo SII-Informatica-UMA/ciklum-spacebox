@@ -35,8 +35,6 @@ public class EventoService {
 
         if(!evento.isPresent()){
             throw new EventoNoEncontradoException();
-        } else if(evento.get().getIdEntrenador() != idEntrenador){
-            throw new EventoNoAutorizadoException();
         } else {
             return evento.get();
         }
@@ -51,8 +49,6 @@ public class EventoService {
 
         if(!evento.isPresent()){
             throw new EventoNoEncontradoException();
-        } else if (evento.get().getIdEntrenador() != idEntrenador){
-            throw new EventoNoAutorizadoException();
         } else {
             repo.delete(evento.get());
         }
@@ -72,9 +68,7 @@ public class EventoService {
 
         if(!evento.isPresent()){
             throw new EventoNoEncontradoException();
-        } else if (evento.get().getIdEntrenador() != idEntrenador){
-            throw new EventoNoAutorizadoException();
-        } else {
+        }  else {
             repo.save(Mapper.toEvento(eventoNuevo));
         }
         
