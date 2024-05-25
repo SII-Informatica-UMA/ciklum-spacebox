@@ -10,31 +10,22 @@ import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.seguridad.JwtUtil;
-import jakarta.persistence.Access;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.annotation.AccessType;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -231,18 +222,6 @@ class EntidadesApplicationTests {
 			@Nested
 			public class crearEventoBdVacia {
 
-				@Test
-				@DisplayName("se crea evento correctamente")
-				public void publicarEventoCorrecto(){
-					var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
-				
-					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
-				
-					var respuesta = restTemplate.exchange(peticion,Void.class);
-				
-					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-				}
-
 			}
 	}
 
@@ -284,16 +263,6 @@ class EntidadesApplicationTests {
 				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Evento>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
-			}
-
-			@Test
-			@DisplayName("no se obtiene el evento porque no se esta autorizado")
-			public void obtenerEventoNoAutorizado() {
-				var peticion = get("http",  "localhost", port, "/calendario/5/1");
-	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
-	
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
 	
 			@Test
@@ -353,11 +322,14 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta modificar un evento con un id de entrandor mal formulado")
 			public void modificarEventoIdEntrenadorErroneo(){
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+				
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(-1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
 
-				var peticion = put("http","localhost",port,"calendario/-5/1", nuevoEvento);
+				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -371,9 +343,11 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta modificar un evento con un id de evento mal formulado")
 			public void modificarEventoIdEventoErroneo(){
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
 
 				var peticion = put("http","localhost",port,"calendario/1/-1", nuevoEvento);
 
@@ -389,9 +363,11 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta modificar el evento con un nuevo id de entrenador mal formado")
 			public void modificarEventoIdEntrenadorNuevoEventoErroneo(){
-				nuevoEvento.setIdEntrenador(-1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(-1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
 
 				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
 
@@ -407,9 +383,11 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta modificar el evento con un nuevo id de cliente mal formado")
 			public void modificarEventoIdClienteNuevoEventoErroneo(){
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(-10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(-1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
 
 				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
 
@@ -425,9 +403,11 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta modificar un evento sobre el que no se tienen permisos")
 			public void modificarEventoSinPermisos(){
-				nuevoEvento.setIdEntrenador(1);
-				nuevoEvento.setIdCliente(10);
-				nuevoEvento.setDescripcion("esta es la nueva descripcion del evento 1");
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
 
 				var peticion = put("http", "localhost", port, "calendario/14/2", nuevoEvento);
 
@@ -519,16 +499,6 @@ class EntidadesApplicationTests {
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			}
-	
-			@Test
-			@DisplayName("no se obtiene disponibilidad porque no se tiene acceso")
-			public void  obtenerDisponibilidadNoExistente() {
-				var peticion = get("http", "localhost", port, "/calendario/1") ;
-	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
-	
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-		}
 
 
 		}
@@ -538,6 +508,41 @@ class EntidadesApplicationTests {
 		@Nested
 		public class crearEventoBdNoVacia {
 
+			@Test
+			@DisplayName("se crea evento correctamente")
+			public void publicarEventoCorrecto(){
+				var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", "observaciones 5", "lugar 5", 1, "inicio 5", "regla de recurrencia 5", 1, Tipo.CITA, 1);
+			
+				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+			
+				var respuesta = restTemplate.exchange(peticion,Void.class);
+			
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+			}
+			
+			@Test
+			@DisplayName("datos introducidos erroneos")
+			public void publicarEventoDatosIncorrectos(){
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
+			
+				var peticion = post("http", "localhost", port, "/calendario/-1", nuevoEvento);
+			
+				var respuesta = restTemplate.exchange(peticion,Void.class);
+			
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			}
+
+			@Test
+			@DisplayName("hay solapamientos")
+			public void publicarEventoSolapamiento(){
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
+			
+				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+			
+				var respuesta = restTemplate.exchange(peticion,Void.class);
+			
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 }

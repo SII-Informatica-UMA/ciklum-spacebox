@@ -3,7 +3,6 @@ package SpaceBox.servicios;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,8 +21,7 @@ import SpaceBox.excepciones.EventoFallidoException;
 import SpaceBox.excepciones.EventoNoAutorizadoException;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
-import SpaceBox.seguridad.JwtUtil;
-import SpaceBox.seguridad.SecurityConfguration;
+//import SpaceBox.seguridad.JwtUtil;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -35,8 +33,8 @@ public class EventoService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private JwtUtil jwt ;
+//    @Autowired
+//    private JwtUtil jwt ;
 
     public EventoService (EventoRepository rep){
         this.repo = rep;
@@ -95,7 +93,7 @@ public class EventoService {
     }
 
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(id < 0 || idEntrenador < 0 || comprobarEventoNuevo(eventoNuevo)){
+        if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || eventoNuevo.getIdCliente() < 0){
             throw new EventoFallidoException();
         }
 
@@ -139,18 +137,22 @@ public class EventoService {
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
     public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(idEntrenador < 0){
+        if(idEntrenador < 0 || comprobarSolapamiento(idEntrenador, eventoNuevo)){
             throw new EventoFallidoException();
-        }
-
-        if(repo.findByIdEntrenador(idEntrenador) == null){
-            throw new EventoNoEncontradoException();
         }
 
         repo.save(Mapper.toEvento(eventoNuevo));
     }
 
+    private boolean comprobarSolapamiento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
+        List<Evento> eventos = repo.findByIdEntrenador(idEntrenador);
+        boolean ok = false ;
 
-
-
+        for (Evento evento : eventos) {
+            if (evento.getInicio().equals(eventoNuevo.getInicio())) {
+                ok = true;
+            }
+        }
+        return ok ;
+    }
 }

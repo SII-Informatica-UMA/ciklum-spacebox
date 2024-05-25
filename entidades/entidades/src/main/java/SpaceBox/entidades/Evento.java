@@ -1,6 +1,5 @@
 package SpaceBox.entidades;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 import jakarta.persistence.Column;
