@@ -10,7 +10,7 @@ import SpaceBox.repositorios.EventoRepository;
 //import SpaceBox.dtos.EventoDTO;
 //import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.seguridad.JwtUtil;
-
+import jakarta.persistence.Access;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,11 +24,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -444,9 +448,14 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se borra correctamente un evento")
 			public void borrarEventoCorrecto(){
-				var peticion = delete("http","localhost",port, "calendario/1/1");
+				//var peticion = delete("http","localhost",port, "calendario/1/1");
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 				assertThat(eventoRepository.count()).isEqualTo(2);
