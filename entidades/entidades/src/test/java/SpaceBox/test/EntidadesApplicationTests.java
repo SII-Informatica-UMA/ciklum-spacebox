@@ -292,13 +292,6 @@ class EntidadesApplicationTests {
 		@Nested
 		public class actualizarEventoBdNoVacia {
 
-			private EventoNuevoDTO nuevoEvento;
-
-			//@BeforeEach
-			public void inicializarNuevoEvento(){
-				nuevoEvento = new EventoNuevoDTO("evento1", "esta es la nueva descripcion del evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 10, Tipo.CITA, 1);
-			}
-
 			@Test
 			@DisplayName("se modifica un evento correctamente")
 			public void modificarEventoCorrectamente(){

@@ -54,44 +54,44 @@ public class EventoService {
         }
     }
     
+    @SuppressWarnings("null")
     public void eliminarEvento(Integer id, Integer idEntrenador) {
-       try {
-        if(id < 0 || idEntrenador < 0){
-            throw new EventoFallidoException();
-        }  else {
-
-            Optional<Evento> evento = repo.findById(id);
-
-            if (!evento.isPresent()) {
-                throw new EventoNoEncontradoException();
+        try {
+            if(id < 0 || idEntrenador < 0){
+                throw new EventoFallidoException();
             } else {
-                String url = "http://localhost:8080/entrenador/" + idEntrenador ;
-                HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
-                
-                ResponseEntity<EntrenadorDTO> respuestaEntrenador = restTemplate.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
-                ResponseEntity<ClienteDTO> respuestaCliente = restTemplate.exchange(url, HttpMethod.GET, entity, ClienteDTO.class);
-    
-                if (respuestaEntrenador.getBody().getId() == evento.get().getIdEntrenador()) {
-                        repo.delete(evento.get());
-                        return ;
-                } else if (respuestaCliente.getBody().getId() == evento.get().getIdCliente()) {
-                        repo.delete(evento.get());
-                        return ;
+
+                Optional<Evento> evento = repo.findById(id);
+
+                if (!evento.isPresent()) {
+                    throw new EventoNoEncontradoException();
                 } else {
-                    throw new EventoNoAutorizadoException();
-                }                
+                    String url = "http://localhost:8080/entrenador/" + idEntrenador ;
+                    HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+                    
+                    ResponseEntity<EntrenadorDTO> respuestaEntrenador = restTemplate.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+                    ResponseEntity<ClienteDTO> respuestaCliente = restTemplate.exchange(url, HttpMethod.GET, entity, ClienteDTO.class);
+        
+                    if (respuestaEntrenador.getBody().getId() == evento.get().getIdEntrenador()) {
+                            repo.delete(evento.get());
+                    } else if (respuestaCliente.getBody().getId() == evento.get().getIdCliente()) {
+                            repo.delete(evento.get());
+                    } else {
+                        throw new EventoNoAutorizadoException();
+                    }                
+                }
             }
+        } catch (HttpClientErrorException e) {
+            throw new EventoNoEncontradoException();
         }
-       } catch (HttpClientErrorException e) {
-              throw new EventoNoEncontradoException();
-       }
     }
 
     //Devuelve TRUE si el evento nuevo tiene IDs de entrenador o cliente mal formulados
+    /* 
     private boolean comprobarEventoNuevo(EventoNuevoDTO eventoNuevo){
         return eventoNuevo.getIdCliente() < 0 || eventoNuevo.getIdEntrenador() < 0;
     }
-
+    */
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
         if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || eventoNuevo.getIdCliente() < 0){
             throw new EventoFallidoException();
