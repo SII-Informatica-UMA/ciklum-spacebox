@@ -114,6 +114,7 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ GET /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
+			@DisplayName("GET: ")
 			public class obtenerEventosBdVacia {
 
 				@Test
@@ -141,6 +142,7 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------  PUT /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
+			@DisplayName("PUT: ")
 			public class actualizarEventoBdVacia {
 
 				@Test
@@ -176,6 +178,7 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------ DELETE /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
+			@DisplayName("DELETE: ")
 			public class eliminarEventoBdVacia {
 
 				@Test
@@ -220,8 +223,25 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------ POST /calendario/{idEntrenador}
 
 			@Nested
+			@DisplayName("POST")
 			public class crearEventoBdVacia {
+				@Test
+				@DisplayName("se inserta un evento correctamente")
+				public void insertarEventoBDVacia(){
+					var nuevoEvento = EventoNuevoDTO.builder()
+					.idEntrenador(1)
+					.idCliente(1)
+					.descripcion("esta es la descripcion del evento 1")
+					.build();
+					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
 
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+					assertThat(eventoRepository.count()).isEqualTo(1);
+					assertThat(eventoRepository.findByIdEntrenador(1).get(0).getDescripcion())
+					.isEqualTo("esta es la descripcion del evento 1");
+				}
 			}
 	}
 
