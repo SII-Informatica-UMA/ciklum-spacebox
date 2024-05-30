@@ -480,7 +480,7 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
 			public void borrarEventoNoAutorizado(){
-				var peticion = delete("http","localhost",port, "calendario/100/1");
+				var peticion = delete("http","localhost",port, "calendario/2/1");
 	
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 	

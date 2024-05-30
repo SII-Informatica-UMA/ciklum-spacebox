@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,8 +23,9 @@ import SpaceBox.excepciones.EventoFallidoException;
 import SpaceBox.excepciones.EventoNoAutorizadoException;
 import SpaceBox.excepciones.EventoNoEncontradoException;
 import SpaceBox.repositorios.EventoRepository;
-//import SpaceBox.seguridad.JwtUtil;
+import SpaceBox.seguridad.SecurityConfguration;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 @Transactional
@@ -56,7 +59,7 @@ public class EventoService {
     
     @SuppressWarnings("null")
     public void eliminarEvento(Integer id, Integer idEntrenador) {
-        try {
+        /*try {
             if(id < 0 || idEntrenador < 0){
                 throw new EventoFallidoException();
             } else {
@@ -83,7 +86,24 @@ public class EventoService {
             }
         } catch (HttpClientErrorException e) {
             throw new EventoNoEncontradoException();
+        }*/
+        
+        
+        if(idEntrenador<0 || id<0) throw new EventoFallidoException();
+        else if(repo.findByIdEntrenador(idEntrenador).isEmpty()) throw new EventoNoEncontradoException();
+        else{            
+            
+            Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+            if(usuario.isEmpty()) throw new EventoNoAutorizadoException();
+
+            Optional<Evento> e = repo.findById(id);
+
+            if(e.isEmpty()) throw new EventoNoEncontradoException();
+            else if(usuario.get().getUsername().compareTo(idEntrenador.toString()) != 0 ) throw new EventoNoAutorizadoException();
+            else repo.delete(e.get());
+            
         }
+        
     }
 
     //Devuelve TRUE si el evento nuevo tiene IDs de entrenador o cliente mal formulados
