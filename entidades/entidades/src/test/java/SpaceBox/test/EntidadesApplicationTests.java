@@ -33,6 +33,7 @@ import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.description;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = EntidadesApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -381,11 +382,11 @@ class EntidadesApplicationTests {
 			@DisplayName("y no se obtiene el evento porque no se ha autenticado")
 			public void obtenerEventoNoAutenticado() {
 				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + "fallo");
 
 				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
-				org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
@@ -401,11 +402,7 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y se modifica correctamente")
 			public void modificarEventoCorrectamente(){
-				var nuevoEvento = EventoNuevoDTO.builder()
-				.idEntrenador(1)
-				.idCliente(10)
-				.descripcion("esta es la nueva descripcion del evento 1")
-				.build();
+				var nuevoEvento = new EventoNuevoDTO("evento1", "esta es la nueva descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 10, Tipo.CITA, 1);
 
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);

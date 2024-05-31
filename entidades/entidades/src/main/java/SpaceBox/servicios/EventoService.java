@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
 import SpaceBox.controladores.Mapper;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
@@ -108,18 +107,32 @@ public class EventoService {
     }
     */
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
+        
         Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+
         if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || idEntrenador < 0 || eventoNuevo.getIdCliente() < 0){
             throw new EventoFallidoException();
         } else if (usuario.isEmpty()) {
-            throw new EventoNoAutorizadoException();
+           throw new EventoNoAutorizadoException();
         } else {
             Optional<Evento> evento = repo.findById(id);
 
             if(evento.isEmpty()){
                 throw new EventoNoEncontradoException();
             } else {
-                repo.save(Mapper.toEvento(eventoNuevo));
+
+                evento.get().setNombre(eventoNuevo.getNombre());
+                evento.get().setDescripcion(eventoNuevo.getDescripcion());
+                evento.get().setObservaciones(eventoNuevo.getObservaciones());
+                evento.get().setLugar(eventoNuevo.getLugar());
+                evento.get().setDuracionMinutos(eventoNuevo.getDuracionMinutos());
+                evento.get().setInicio(eventoNuevo.getInicio());
+                evento.get().setReglaRecurrencia(eventoNuevo.getReglaRecurrencia());
+                evento.get().setIdCliente(eventoNuevo.getIdCliente());
+                evento.get().setTipo(eventoNuevo.getTipo());
+                evento.get().setIdEntrenador(eventoNuevo.getIdEntrenador());
+
+                repo.save(evento.get());
             }
         }
     }
