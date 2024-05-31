@@ -546,9 +546,12 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se obtiene disponibilidad del entrenadorr")
 			public void  obtenerDisponibilidad() {
-				var peticion = get("http", "localhost", port, "/calendario/1") ;
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 			}
@@ -556,11 +559,24 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("no se obtiene disponibilidad porque no existe el entrenador")
 			public void  obtenerDisponibilidadMalaPeticion() {
-				var peticion = get("http", "localhost", port, "/calendario/-3") ;
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
+	
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
+	
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			}
+
+			@Test
+			@DisplayName("no se obtiene disponibilidad porque el usuario no se ha autenticado")
+			public void  obtenerDisponibilidadNoAutenticado() {
+				var peticion = get("http", "localhost", port, "/calendario/1") ;
 	
 				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
 	
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
 
 

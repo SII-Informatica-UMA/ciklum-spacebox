@@ -43,7 +43,7 @@ public class EventoService {
         if(usuario.isEmpty()) {
             throw new EventoNoAutorizadoException();
         }
-        
+
         Optional<Evento> evento = repo.findById(idElemento);
 
         if(!evento.isPresent()){
@@ -137,15 +137,21 @@ public class EventoService {
     // - 404: No se ha encontrado eventos de esas caracteristicas
     public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
+        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+
         if(idEntrenador < 0){
             throw new EventoFallidoException();
+        } else if (usuario.isEmpty()) {
+             throw new EventoNoAutorizadoException();
+        } else {
+            if (repo.findByIdEntrenador(idEntrenador).isEmpty()) {
+                throw new EventoNoEncontradoException();
+            } else {
+                return repo.findByIdEntrenador(idEntrenador);
+            }
         }
         
-        if (repo.findByIdEntrenador(idEntrenador).isEmpty()) {
-            throw new EventoNoEncontradoException();
-        } else {
-            return repo.findByIdEntrenador(idEntrenador);
-        }
+
     }
 
     // Metodo asociado al POST /calendario/{idEntrenador}
