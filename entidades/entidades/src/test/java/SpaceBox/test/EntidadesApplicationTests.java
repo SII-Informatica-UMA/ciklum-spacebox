@@ -162,9 +162,12 @@ class EntidadesApplicationTests {
 						.descripcion("descripcion de evento 1")
 						.build();
 		
-					var peticion = put("http", "localhost", port, "calendario/1/10", nuevoEvento);
+						HttpHeaders headers = new HttpHeaders();
+						headers.add("Authorization", "Bearer " + token);
 		
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+						HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+						var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/10", 
+						org.springframework.http.HttpMethod.PUT, entity, Void.class);
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 				}
@@ -174,9 +177,12 @@ class EntidadesApplicationTests {
 				public void modificarEventoNoExisteEntrenador(){
 					var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 		
-					var peticion = put("http", "localhost", port, "calendario/5/1", nuevoEvento);
-		
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+	
+					HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/10/1", 
+					org.springframework.http.HttpMethod.PUT, entity, Void.class);
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 				}
@@ -362,12 +368,15 @@ class EntidadesApplicationTests {
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
+				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
-				assertThat(eventoRepository.findById(1).get().getDescripcion())
+ 				assertThat(eventoRepository.findById(1).get().getDescripcion())
 				.isEqualTo("esta es la nueva descripcion del evento 1");
 				assertThat(eventoRepository.findById(1).get().getIdCliente()).isEqualTo(10);
 			}
@@ -382,9 +391,12 @@ class EntidadesApplicationTests {
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http","localhost",port,"calendario/-1/1", nuevoEvento);
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", 
+				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 				assertThat(eventoRepository.findById(1).get().getDescripcion())
@@ -402,9 +414,12 @@ class EntidadesApplicationTests {
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http","localhost",port,"calendario/1/-1", nuevoEvento);
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/-1", 
+				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 				assertThat(eventoRepository.findById(1).get().getDescripcion())
@@ -422,9 +437,12 @@ class EntidadesApplicationTests {
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
 
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
+				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 				assertThat(eventoRepository.findById(1).get().getDescripcion())
@@ -462,7 +480,7 @@ class EntidadesApplicationTests {
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http", "localhost", port, "calendario/14/2", nuevoEvento);
+				var peticion = put("http", "localhost", port, "calendario/1/1", nuevoEvento);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 

@@ -108,24 +108,20 @@ public class EventoService {
     }
     */
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || eventoNuevo.getIdCliente() < 0){
-            throw new EventoFallidoException();
-        }
-
         Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
-        if(usuario.isEmpty()) throw new EventoNoAutorizadoException();
-
-        Optional<Evento> evento = repo.findById(id);
-
-        if(evento.isEmpty()){
-            throw new EventoNoEncontradoException();
-        } else if (usuario.get().getUsername().compareTo(idEntrenador.toString()) != 0 ){
+        if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || idEntrenador < 0 || eventoNuevo.getIdCliente() < 0){
+            throw new EventoFallidoException();
+        } else if (usuario.isEmpty()) {
             throw new EventoNoAutorizadoException();
         } else {
-            repo.save(Mapper.toEvento(eventoNuevo));
+            Optional<Evento> evento = repo.findById(id);
+
+            if(evento.isEmpty()){
+                throw new EventoNoEncontradoException();
+            } else {
+                repo.save(Mapper.toEvento(eventoNuevo));
+            }
         }
-        
-        
     }
 
     // Metodo asociado al GET /calendario/{idEntrenador}
