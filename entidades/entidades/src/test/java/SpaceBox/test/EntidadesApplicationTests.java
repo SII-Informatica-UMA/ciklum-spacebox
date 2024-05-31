@@ -121,9 +121,13 @@ class EntidadesApplicationTests {
 				@Test
 				@DisplayName("no se obtienen eventos porque no los hay")
 				public void obtenerEventoNoExistente() {
-					var peticion = get("http",  "localhost", port, "/calendario/1/10");
+
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+	
+					HttpEntity<Void> entity = new HttpEntity<>(headers);
 		
-					var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/10", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 				}
@@ -131,9 +135,12 @@ class EntidadesApplicationTests {
 				@Test
 				@DisplayName("no se obtienen eventos porque no los hay")
 				public void obtenerEventoNoExisteEntrenador() {
-					var peticion = get("http",  "localhost", port, "/calendario/10/1");
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+	
+					HttpEntity<Void> entity = new HttpEntity<>(headers);
 		
-					var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/10/1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 				}
@@ -269,13 +276,12 @@ class EntidadesApplicationTests {
 	@DisplayName("cuando hay eventos en la base de datos")
 	public class ConEventos {
 
+		private Evento Evento1 = new Evento("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, 1, Tipo.CITA, 1);
+		private Evento Evento2 = new Evento("evento2", "descripcion de evento 2", "observaciones 2", "lugar 2", 2, "inicio 2", "regla de recurrencia 2", 1, 2, Tipo.CITA, 2);
+		private Evento Evento3 = new Evento("evento3", "descripcion de evento 3", "observaciones 3", "lugar 3", 3, "inicio 3", "regla de recurrencia 3", 2, 3, Tipo.CITA, 3);
+
 		@BeforeEach
 		public void inicializarBaseDeDatosConEventos() {
-
-			var Evento1 = new Evento("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, 1, Tipo.CITA, 1);
-			var Evento2 = new Evento("evento2", "descripcion de evento 2", "observaciones 2", "lugar 2", 2, "inicio 2", "regla de recurrencia 2", 1, 2, Tipo.CITA, 2);
-			var Evento3 = new Evento("evento3", "descripcion de evento 3", "observaciones 3", "lugar 3", 3, "inicio 3", "regla de recurrencia 3", 2, 3, Tipo.CITA, 3);
-			
 
 			eventoRepository.save(Evento1);
 			eventoRepository.save(Evento2);
@@ -293,19 +299,26 @@ class EntidadesApplicationTests {
 			@DisplayName("se obtiene un evento concreto del entrenador")
 			public void obtenerEvento() {
 				
-				var peticion = get("http",  "localhost", port, "/calendario/1/1");
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<Evento>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+				assertThat(respuesta.getBody().equals(Evento1)) ;
 			}
 	
 			@Test
 			@DisplayName("no se obtiene el evento porque el id de entrenador es erroneo")
 			public void obtenerEventoMalaPeticion1() {
-				var peticion = get("http",  "localhost", port, "/calendario/-3/1");
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			}
@@ -313,11 +326,24 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("no se obtiene el evento porque el id de entrenamientoes erroneo")
 			public void obtenerEventoMalaPeticion2() {
-				var peticion = get("http",  "localhost", port, "/calendario/1/-3");
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
+	
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/-1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<EventoDTO>() {});
+	
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			}
+
+			@Test
+			@DisplayName("no se obtiene el evento porque no se ha autenticado")
+			public void obtenerEventoNoAutenticado() {
+				var peticion = get("http",  "localhost", port, "/calendario/2/1");
 	
 				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
 	
-				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
 		}
 

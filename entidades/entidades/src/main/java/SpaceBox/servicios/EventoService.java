@@ -33,10 +33,17 @@ public class EventoService {
     }
 
     public Evento obtenerEvento(Integer idEntrenador, Integer idElemento) {
+
         if(idEntrenador < 0 || idElemento < 0){
             throw new EventoFallidoException();
-        }
+        }            
+        
+        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
 
+        if(usuario.isEmpty()) {
+            throw new EventoNoAutorizadoException();
+        }
+        
         Optional<Evento> evento = repo.findById(idElemento);
 
         if(!evento.isPresent()){
