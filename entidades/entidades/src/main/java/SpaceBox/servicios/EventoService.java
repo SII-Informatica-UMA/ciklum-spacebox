@@ -3,20 +3,9 @@ package SpaceBox.servicios;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import SpaceBox.controladores.Mapper;
-import SpaceBox.dtos.ClienteDTO;
-import SpaceBox.dtos.EntrenadorDTO;
 import SpaceBox.dtos.EventoNuevoDTO;
 import SpaceBox.entidades.Evento;
 import SpaceBox.excepciones.EventoFallidoException;
@@ -33,8 +22,8 @@ public class EventoService {
 
     private EventoRepository repo;
 
-    @Autowired
-    private RestTemplate restTemplate;
+//    @Autowired
+//    private RestTemplate restTemplate;
 
 //    @Autowired
 //    private JwtUtil jwt ;
@@ -57,7 +46,6 @@ public class EventoService {
         }
     }
     
-    @SuppressWarnings("null")
     public void eliminarEvento(Integer id, Integer idEntrenador) {
         /*try {
             if(id < 0 || idEntrenador < 0){
@@ -117,11 +105,16 @@ public class EventoService {
             throw new EventoFallidoException();
         }
 
+        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+        if(usuario.isEmpty()) throw new EventoNoAutorizadoException();
+
         Optional<Evento> evento = repo.findById(id);
 
-        if(!evento.isPresent()){
+        if(evento.isEmpty()){
             throw new EventoNoEncontradoException();
-        }  else {
+        } else if (usuario.get().getUsername().compareTo(idEntrenador.toString()) != 0 ){
+            throw new EventoNoAutorizadoException();
+        } else {
             repo.save(Mapper.toEvento(eventoNuevo));
         }
         
@@ -160,8 +153,16 @@ public class EventoService {
         if(idEntrenador < 0 || comprobarSolapamiento(idEntrenador, eventoNuevo)){
             throw new EventoFallidoException();
         }
-
-        repo.save(Mapper.toEvento(eventoNuevo));
+        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+        if(usuario.isEmpty()){
+            throw new EventoNoAutorizadoException();
+        } 
+        
+        if(usuario.get().getUsername().compareTo(idEntrenador.toString()) != 0 ){
+            throw new EventoNoAutorizadoException();
+        } else {
+            repo.save(Mapper.toEvento(eventoNuevo));
+        }  
     }
 
     private boolean comprobarSolapamiento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {

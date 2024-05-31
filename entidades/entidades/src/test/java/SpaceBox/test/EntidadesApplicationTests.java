@@ -21,6 +21,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -223,25 +224,32 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------ POST /calendario/{idEntrenador}
 
 			@Nested
-			@DisplayName("POST")
+			@DisplayName("se inserta un evento con la BD vacia")
 			public class crearEventoBdVacia {
 				@Test
 				@DisplayName("se inserta un evento correctamente")
-				public void insertarEventoBDVacia(){
+				public void insertarEventoBDVacia() {
+					
 					var nuevoEvento = EventoNuevoDTO.builder()
-					.idEntrenador(1)
-					.idCliente(1)
-					.descripcion("esta es la descripcion del evento 1")
-					.build();
-					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+						.idEntrenador(1)
+						.idCliente(1)
+						.descripcion("esta es la descripcion del evento 1")
+						.build();
 
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+					
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+
+					HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", HttpMethod.POST, 
+					entity, Void.class);
 
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 					assertThat(eventoRepository.count()).isEqualTo(1);
 					assertThat(eventoRepository.findByIdEntrenador(1).get(0).getDescripcion())
-					.isEqualTo("esta es la descripcion del evento 1");
+						.isEqualTo("esta es la descripcion del evento 1");
 				}
+				
 			}
 	}
 
@@ -310,6 +318,7 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------  PUT /calendario/{idEntrenador}/{idEvento}
 
 		@Nested
+		@DisplayName("metodo PUT: ")
 		public class actualizarEventoBdNoVacia {
 
 			@Test
