@@ -159,7 +159,8 @@ public class EventoService {
     // - 403: Acceso no autorizado
     // - 404: No se ha encontrado el entrenador
     public void aniadirEvento(Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
-        if(idEntrenador < 0 || comprobarSolapamiento(idEntrenador, eventoNuevo)){
+        if(idEntrenador < 0 || comprobarSolapamiento(idEntrenador, eventoNuevo) || 
+        eventoNuevo.getIdCliente() < 0 || eventoNuevo.getIdEntrenador() < 0){
             throw new EventoFallidoException();
         }
         Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();

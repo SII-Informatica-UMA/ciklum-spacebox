@@ -250,25 +250,62 @@ class EntidadesApplicationTests {
 				@Test
 				@DisplayName("y se inserta correctamente")
 				public void insertarEventoBDVacia() {
-					
-					var nuevoEvento = EventoNuevoDTO.builder()
-						.idEntrenador(1)
-						.idCliente(1)
-						.descripcion("esta es la descripcion del evento 1")
-						.build();
-
-					
-					HttpHeaders headers = new HttpHeaders();
-					headers.add("Authorization", "Bearer " + token);
-
-					HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
-					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", 
-					org.springframework.http.HttpMethod.POST, entity, Void.class);
-
-					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+					var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", 
+					"observaciones 5", "lugar 5", 1, "inicio 5",
+					 "regla de recurrencia 5", 15, Tipo.CITA, 1);
+				
+					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+				
+					var respuesta = restTemplate.exchange(peticion,Void.class);
+				
+					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 					assertThat(eventoRepository.count()).isEqualTo(1);
-					assertThat(eventoRepository.findByIdEntrenador(1).get(0).getDescripcion())
-						.isEqualTo("esta es la descripcion del evento 1");
+					assertThat(eventoRepository.findByIdCliente(15).get(0).getNombre()).isEqualTo("evento5");
+				}
+
+				@Test
+				@DisplayName("y no se inserta porque el id del entrenador esta mal formulado")
+				public void insertarEventoBDVaciaMalIdEntrenador(){
+					var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", 
+					"observaciones 5", "lugar 5", 1, "inicio 5",
+					 "regla de recurrencia 5", 15, Tipo.CITA, 1);
+				
+					var peticion = post("http", "localhost", port, "/calendario/-1", nuevoEvento);
+				
+					var respuesta = restTemplate.exchange(peticion,Void.class);
+				
+					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertThat(eventoRepository.count()).isEqualTo(0);
+				}
+
+				@Test
+				@DisplayName("y no se inserta porque el id del entrenador en el nuevo evento esta mal formulado")
+				public void insertarEventoBDVaciaMalIdEntrenadorNuevoEvento(){
+					var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", 
+					"observaciones 5", "lugar 5", 1, "inicio 5",
+					 "regla de recurrencia 5", 15, Tipo.CITA, -1);
+				
+					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+				
+					var respuesta = restTemplate.exchange(peticion,Void.class);
+				
+					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertThat(eventoRepository.count()).isEqualTo(0);
+				}
+
+				@Test
+				@DisplayName("y no se inserta porque el id del cliente en el nuevo evento esta mal formulado")
+				public void insertarEventoBDVaciaMalIdClienteNuevoEvento(){
+					var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", 
+					"observaciones 5", "lugar 5", 1, "inicio 5",
+					 "regla de recurrencia 5", -15, Tipo.CITA, 1);
+				
+					var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
+				
+					var respuesta = restTemplate.exchange(peticion,Void.class);
+				
+					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+					assertThat(eventoRepository.count()).isEqualTo(0);
 				}
 				
 			}
@@ -382,7 +419,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("y no se modifica porque el id de entrenador del evento esta mal formulado")
+			@DisplayName("y no se modifica porque el id de entrenador esta mal formulado")
 			public void modificarEventoIdEntrenadorErroneo(){
 				
 				var nuevoEvento = EventoNuevoDTO.builder()
@@ -495,7 +532,7 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ DELETE /calendario/{idEntrenador}/{idEvento}
 
 		@Nested
-		@DisplayName("se intenta eliminar un evento ")
+		@DisplayName("se intenta ELIMINAR un evento ")
 		public class eliminarEventoBdNoVacia {
 			@Test
 			@DisplayName("y se borra correctamente")
@@ -559,7 +596,7 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ GET /calendario/{idEntrenador}
 
 		@Nested
-		@DisplayName("se intenta obtener la disponibilidad de un entrenador ")
+		@DisplayName("se intenta OBTENER la disponibilidad de un entrenador ")
 		public class obtenerDisponibilidadBdNoVacia {
 			@Test
 			@DisplayName("y se obtiene correctamente")
@@ -582,17 +619,24 @@ class EntidadesApplicationTests {
 
 				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1", org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1", 
+				org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 			}
 
 			@Test
-			@DisplayName("no se obtiene disponibilidad porque el usuario no se ha autenticado")
+			@DisplayName("y no se obtiene porque el usuario no se ha autenticado")
 			public void  obtenerDisponibilidadNoAutenticado() {
-				var peticion = get("http", "localhost", port, "/calendario/1") ;
+				userDetails = jwtUtil.createUserDetails("100", "", List.of("ROLE_USER")) ;
+				token = jwtUtil.generateToken(userDetails) ;
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", 
+				org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
@@ -609,7 +653,8 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y se crea correctamente")
 			public void publicarEventoCorrecto(){
-				var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", "observaciones 5", "lugar 5", 1, "inicio 5", "regla de recurrencia 5", 15, Tipo.CITA, 1);
+				var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", 
+				"observaciones 5", "lugar 5", 1, "inicio 5", "regla de recurrencia 5", 15, Tipo.CITA, 1);
 			
 				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
 			
@@ -624,7 +669,8 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y no se crea porque los datos introducidos son erroneos")
 			public void publicarEventoDatosIncorrectos(){
-				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 15, Tipo.CITA, 1);
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", 
+				"observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 15, Tipo.CITA, 1);
 			
 				var peticion = post("http", "localhost", port, "/calendario/-1", nuevoEvento);
 			
@@ -634,15 +680,22 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("y nos se crea porque hay solapamientos")
+			@DisplayName("y no se crea porque hay solapamientos")
 			public void publicarEventoSolapamiento(){
-				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", 
+				"observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 			
 				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
 			
 				var respuesta = restTemplate.exchange(peticion,Void.class);
 			
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+			}
+
+			@Test
+			@DisplayName("y no se crea porque no se tienen permisos")
+			public void publicarEventoSinPermisos(){
+				
 			}
 		}
 	}
