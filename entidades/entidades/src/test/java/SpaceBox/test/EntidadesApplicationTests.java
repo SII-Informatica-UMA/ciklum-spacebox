@@ -186,20 +186,27 @@ class EntidadesApplicationTests {
 				@DisplayName("se intenta borrar un evento que no existe")
 				public void borrarEventoNoExistente(){
 		
-					var peticion = delete("http","localhost",port, "/calendario/1/5");
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+	
+					HttpEntity<Void> entity = new HttpEntity<>(headers);
 		
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/5", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+					assertThat(eventoRepository.count()).isEqualTo(0);
 				}
 		
 				@Test
 				@DisplayName("se intenta borrar un evento para el que no existe el entrenador introducido")
 				public void borrarEventoNoExisteEntrenador(){
 		
-					var peticion = delete("http","localhost",port, "/calendario/5/1");
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + token);
+	
+					HttpEntity<Void> entity = new HttpEntity<>(headers);
 		
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/5/1", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
 		
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 				}
@@ -467,9 +474,13 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta borrar un evento con id mal formulado")
 			public void borrarEventoMalId(){
-				var peticion = delete("http","localhost",port, "calendario/1/-1");
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/-1", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 				assertThat(eventoRepository.count()).isEqualTo(3);
@@ -478,9 +489,13 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("se intenta borrar un evento con id de entrenador mal formulado")
 			public void borrarEventoMalIdEntrenador(){
-				var peticion = delete("http","localhost",port, "calendario/-1/1");
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 				assertThat(eventoRepository.count()).isEqualTo(3);
