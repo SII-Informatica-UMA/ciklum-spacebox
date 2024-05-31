@@ -380,9 +380,15 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y no se obtiene el evento porque no se ha autenticado")
 			public void obtenerEventoNoAutenticado() {
-				var peticion = get("http",  "localhost", port, "/calendario/2/1");
+				userDetails = jwtUtil.createUserDetails("30", "", List.of("ROLE_USER")) ;
+				token = jwtUtil.generateToken(userDetails) ;
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + token);
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {});
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
+				org.springframework.http.HttpMethod.GET, entity, new ParameterizedTypeReference<List<EventoDTO>>() {});
 	
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
@@ -398,10 +404,9 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y se modifica correctamente")
 			public void modificarEventoCorrectamente(){
-
 				var nuevoEvento = EventoNuevoDTO.builder()
 				.idEntrenador(1)
-				.idCliente(1)
+				.idCliente(10)
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
@@ -409,13 +414,14 @@ class EntidadesApplicationTests {
 				headers.add("Authorization", "Bearer " + token);
 
 				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", 
 				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
- 				assertThat(eventoRepository.findById(1).get().getDescripcion())
-				.isEqualTo("esta es la nueva descripcion del evento 1");
-				assertThat(eventoRepository.findById(1).get().getIdCliente()).isEqualTo(10);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("esta es la nueva descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(10);
 			}
 
 			@Test
@@ -527,6 +533,26 @@ class EntidadesApplicationTests {
 				assertThat(eventoRepository.findById(1).get().getIdCliente())
 				.isEqualTo(1);
 			}
+
+			@Test
+			@DisplayName("y no se modifica porque no existe el id del evento")
+			public void modificarEventoNoExistenteBDNoVacia(){
+				var nuevoEvento = EventoNuevoDTO.builder()
+				.idEntrenador(1)
+				.idCliente(1)
+				.descripcion("esta es la nueva descripcion del evento 1")
+				.build();
+
+				var peticion = put("http", "localhost", port, "calendario/1/1000", nuevoEvento);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+				assertThat(eventoRepository.findById(1).get().getDescripcion())
+				.isEqualTo("descripcion de evento 1");
+				assertThat(eventoRepository.findById(1).get().getIdCliente())
+				.isEqualTo(1);
+			}
 		}
 
 		// ------------------------------------------------ DELETE /calendario/{idEntrenador}/{idEvento}
@@ -626,9 +652,9 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("y no se obtiene porque el usuario no se ha autenticado")
+			@DisplayName("y no se obtiene la disponibilidad porque el usuario no se ha autenticado")
 			public void  obtenerDisponibilidadNoAutenticado() {
-				userDetails = jwtUtil.createUserDetails("100", "", List.of("ROLE_USER")) ;
+				userDetails = jwtUtil.createUserDetails("30", "", List.of("ROLE_USER")) ;
 				token = jwtUtil.generateToken(userDetails) ;
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);
