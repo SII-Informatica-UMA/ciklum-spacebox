@@ -21,7 +21,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -37,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = EntidadesApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DisplayName("Pruebas de eventos ")
 class EntidadesApplicationTests {
 
 	@Autowired
@@ -115,11 +115,11 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ GET /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
-			@DisplayName("GET: ")
+			@DisplayName("se intenta obtener un evento ")
 			public class obtenerEventosBdVacia {
 
 				@Test
-				@DisplayName("no se obtienen eventos porque no los hay")
+				@DisplayName("y no se obtienen porque no los hay")
 				public void obtenerEventoNoExistente() {
 
 					HttpHeaders headers = new HttpHeaders();
@@ -133,7 +133,7 @@ class EntidadesApplicationTests {
 				}
 
 				@Test
-				@DisplayName("no se obtienen eventos porque no los hay")
+				@DisplayName("y no se obtienen porque no los hay")
 				public void obtenerEventoNoExisteEntrenador() {
 					HttpHeaders headers = new HttpHeaders();
 					headers.add("Authorization", "Bearer " + token);
@@ -150,11 +150,11 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------  PUT /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
-			@DisplayName("PUT: ")
+			@DisplayName("se intenta modificar un evento ")
 			public class actualizarEventoBdVacia {
 
 				@Test
-				@DisplayName("se intenta modificar un evento que no existe")
+				@DisplayName("y no se modifica nada porque no existe")
 				public void modificarEventoNoExistente(){
 					var nuevoEvento = EventoNuevoDTO.builder()
 						.idEntrenador(1)
@@ -170,7 +170,7 @@ class EntidadesApplicationTests {
 				}
 		
 				@Test
-				@DisplayName("se intenta modificar evento y el entrenador no existe")
+				@DisplayName("y el entrenador no existe")
 				public void modificarEventoNoExisteEntrenador(){
 					var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 		
@@ -186,11 +186,11 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------ DELETE /calendario/{idEntrenador}/{idEvento}
 
 			@Nested
-			@DisplayName("DELETE: ")
+			@DisplayName("se intenta borrar un evento ")
 			public class eliminarEventoBdVacia {
 
 				@Test
-				@DisplayName("se intenta borrar un evento que no existe")
+				@DisplayName("y no se borra nada porque no existe")
 				public void borrarEventoNoExistente(){
 		
 					HttpHeaders headers = new HttpHeaders();
@@ -205,7 +205,7 @@ class EntidadesApplicationTests {
 				}
 		
 				@Test
-				@DisplayName("se intenta borrar un evento para el que no existe el entrenador introducido")
+				@DisplayName("y no se borra nada porque no existe el entrenador introducido")
 				public void borrarEventoNoExisteEntrenador(){
 		
 					HttpHeaders headers = new HttpHeaders();
@@ -222,10 +222,11 @@ class EntidadesApplicationTests {
 			// ------------------------------------------------ GET /calendario/{idEntrenador}
 
 			@Nested
+			@DisplayName("se intenta obtener disponibilidad de un entranador ")
 			public class obtenerDisponibilidadBdVacia {
 
 				@Test
-				@DisplayName("no se obtiene disponibilidad porque no existe el entrenador")
+				@DisplayName("y no se obtiene porque no existe el entrenador")
 				public void  obtenerDisponibilidadNoExistente() {
 					var peticion = get("http", "localhost", port, "/calendario/10") ;
 		
@@ -241,7 +242,7 @@ class EntidadesApplicationTests {
 			@DisplayName("se inserta un evento con la BD vacia")
 			public class crearEventoBdVacia {
 				@Test
-				@DisplayName("se inserta un evento correctamente")
+				@DisplayName("y se inserta correctamente")
 				public void insertarEventoBDVacia() {
 					
 					var nuevoEvento = EventoNuevoDTO.builder()
@@ -255,8 +256,8 @@ class EntidadesApplicationTests {
 					headers.add("Authorization", "Bearer " + token);
 
 					HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
-					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", HttpMethod.POST, 
-					entity, Void.class);
+					var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1", 
+					org.springframework.http.HttpMethod.POST, entity, Void.class);
 
 					assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
 					assertThat(eventoRepository.count()).isEqualTo(1);
@@ -266,11 +267,6 @@ class EntidadesApplicationTests {
 				
 			}
 	}
-
-
-
-
-	
 
 	@Nested
 	@DisplayName("cuando hay eventos en la base de datos")
@@ -293,10 +289,12 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ GET /calendario/{idEntrenador}/{idEvento}
 		
 		@Nested
+		@DisplayName("se intenta obtener un evento ")
 		public class obtenerEventosBdNoVacia {
 
+			@SuppressWarnings("null")
 			@Test
-			@DisplayName("se obtiene un evento concreto del entrenador")
+			@DisplayName("y se obtiene un evento concreto del entrenador")
 			public void obtenerEvento() {
 				
 				HttpHeaders headers = new HttpHeaders();
@@ -311,7 +309,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("no se obtiene el evento porque el id de entrenador es erroneo")
+			@DisplayName("y no se obtiene el evento porque el id de entrenador es erroneo")
 			public void obtenerEventoMalaPeticion1() {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);
@@ -324,7 +322,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("no se obtiene el evento porque el id de entrenamientoes erroneo")
+			@DisplayName("y no se obtiene el evento porque el id del evento es erroneo")
 			public void obtenerEventoMalaPeticion2() {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);
@@ -337,7 +335,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("no se obtiene el evento porque no se ha autenticado")
+			@DisplayName("y no se obtiene el evento porque no se ha autenticado")
 			public void obtenerEventoNoAutenticado() {
 				var peticion = get("http",  "localhost", port, "/calendario/2/1");
 	
@@ -351,11 +349,11 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------  PUT /calendario/{idEntrenador}/{idEvento}
 
 		@Nested
-		@DisplayName("metodo PUT: ")
+		@DisplayName("se intenta actualizar un evento ")
 		public class actualizarEventoBdNoVacia {
 
 			@Test
-			@DisplayName("se modifica un evento correctamente")
+			@DisplayName("y se modifica correctamente")
 			public void modificarEventoCorrectamente(){
 
 				var nuevoEvento = EventoNuevoDTO.builder()
@@ -375,16 +373,16 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("se intenta modificar un evento con un id de entrandor mal formulado")
+			@DisplayName("y no se modifica porque el id de entrenador del evento esta mal formulado")
 			public void modificarEventoIdEntrenadorErroneo(){
 				
 				var nuevoEvento = EventoNuevoDTO.builder()
-				.idEntrenador(-1)
+				.idEntrenador(1)
 				.idCliente(1)
 				.descripcion("esta es la nueva descripcion del evento 1")
 				.build();
 
-				var peticion = put("http","localhost",port,"calendario/1/1", nuevoEvento);
+				var peticion = put("http","localhost",port,"calendario/-1/1", nuevoEvento);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -396,7 +394,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("se intenta modificar un evento con un id de evento mal formulado")
+			@DisplayName("y no se modifica porque el id del evento esta mal formulado")
 			public void modificarEventoIdEventoErroneo(){
 				var nuevoEvento = EventoNuevoDTO.builder()
 				.idEntrenador(1)
@@ -416,7 +414,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("se intenta modificar el evento con un nuevo id de entrenador mal formado")
+			@DisplayName("y no se modifica porque el nuevo id de entrenador esta mal formado")
 			public void modificarEventoIdEntrenadorNuevoEventoErroneo(){
 				var nuevoEvento = EventoNuevoDTO.builder()
 				.idEntrenador(-1)
@@ -436,7 +434,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("se intenta modificar el evento con un nuevo id de cliente mal formado")
+			@DisplayName("y no se modifica porque el nuevo id de cliente esta mal formado")
 			public void modificarEventoIdClienteNuevoEventoErroneo(){
 				var nuevoEvento = EventoNuevoDTO.builder()
 				.idEntrenador(1)
@@ -456,7 +454,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("se intenta modificar un evento sobre el que no se tienen permisos")
+			@DisplayName("y no se modifica porque no se tienen permisos")
 			public void modificarEventoSinPermisos(){
 				var nuevoEvento = EventoNuevoDTO.builder()
 				.idEntrenador(1)
@@ -479,9 +477,10 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ DELETE /calendario/{idEntrenador}/{idEvento}
 
 		@Nested
+		@DisplayName("se intenta eliminar un evento ")
 		public class eliminarEventoBdNoVacia {
 			@Test
-			@DisplayName("se borra correctamente un evento")
+			@DisplayName("y se borra correctamente")
 			public void borrarEventoCorrecto(){
 				//var peticion = delete("http","localhost",port, "calendario/1/1");
 
@@ -498,7 +497,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("se intenta borrar un evento con id mal formulado")
+			@DisplayName("y no se borra porque el id esta mal formulado")
 			public void borrarEventoMalId(){
 
 				HttpHeaders headers = new HttpHeaders();
@@ -513,7 +512,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("se intenta borrar un evento con id de entrenador mal formulado")
+			@DisplayName("y no se borra porque el id de entrenador esta mal formulado")
 			public void borrarEventoMalIdEntrenador(){
 
 				HttpHeaders headers = new HttpHeaders();
@@ -528,7 +527,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("se intenta borrar un evento sobre el que no se tienen permisos")
+			@DisplayName("y no se borra porque se intenta borrar un evento sobre el que no se tienen permisos")
 			public void borrarEventoNoAutorizado(){
 				var peticion = delete("http","localhost",port, "calendario/2/1");
 	
@@ -542,9 +541,10 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ GET /calendario/{idEntrenador}
 
 		@Nested
+		@DisplayName("se intenta obtener la disponibilidad de un entrenador ")
 		public class obtenerDisponibilidadBdNoVacia {
 			@Test
-			@DisplayName("se obtiene disponibilidad del entrenadorr")
+			@DisplayName("y se obtiene correctamente")
 			public void  obtenerDisponibilidad() {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);
@@ -557,7 +557,7 @@ class EntidadesApplicationTests {
 			}
 	
 			@Test
-			@DisplayName("no se obtiene disponibilidad porque no existe el entrenador")
+			@DisplayName("y no se obtiene porque no existe el entrenador")
 			public void  obtenerDisponibilidadMalaPeticion() {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("Authorization", "Bearer " + token);
@@ -585,24 +585,28 @@ class EntidadesApplicationTests {
 		// ------------------------------------------------ POST /calendario/{idEntrenador}
 
 		@Nested
+		@DisplayName("se intenta crear un nuevo evento ")
 		public class crearEventoBdNoVacia {
 
 			@Test
-			@DisplayName("se crea evento correctamente")
+			@DisplayName("y se crea correctamente")
 			public void publicarEventoCorrecto(){
-				var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", "observaciones 5", "lugar 5", 1, "inicio 5", "regla de recurrencia 5", 1, Tipo.CITA, 1);
+				var nuevoEvento = new EventoNuevoDTO("evento5", "descripcion de evento 5", "observaciones 5", "lugar 5", 1, "inicio 5", "regla de recurrencia 5", 15, Tipo.CITA, 1);
 			
 				var peticion = post("http", "localhost", port, "/calendario/1", nuevoEvento);
 			
 				var respuesta = restTemplate.exchange(peticion,Void.class);
 			
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+				assertThat(eventoRepository.count()).isEqualTo(4);
+				assertThat(eventoRepository.findByIdCliente(15).get(0).getNombre()).isEqualTo("evento5");
+
 			}
 			
 			@Test
-			@DisplayName("datos introducidos erroneos")
+			@DisplayName("y no se crea porque los datos introducidos son erroneos")
 			public void publicarEventoDatosIncorrectos(){
-				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 15, Tipo.CITA, 1);
 			
 				var peticion = post("http", "localhost", port, "/calendario/-1", nuevoEvento);
 			
@@ -612,7 +616,7 @@ class EntidadesApplicationTests {
 			}
 
 			@Test
-			@DisplayName("hay solapamientos")
+			@DisplayName("y nos se crea porque hay solapamientos")
 			public void publicarEventoSolapamiento(){
 				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", "observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
 			
@@ -625,29 +629,3 @@ class EntidadesApplicationTests {
 		}
 	}
 }
-
-/*
-		@BeforeEach
-		public void inicializarBaseDeDatos() {
-			var Evento1 = new Evento();
-			Evento1.setId(1);
-			Evento1.setIdEntrenador(1);
-			Evento1.setIdCliente(1);
-			Evento1.setDescripcion("descripcion de evento 1");
-			var Evento2 = new Evento();
-			Evento2.setId(2);
-			Evento2.setIdEntrenador(1);
-			Evento2.setIdCliente(2);
-			Evento2.setDescripcion("descripcion de evento 2");
-			var Evento3 = new Evento();
-			Evento3.setId(3);
-			Evento3.setIdEntrenador(2);
-			Evento3.setIdCliente(3);
-			Evento3.setDescripcion("descripcion de evento 3");
-			
-			eventoRepository.save(Evento1);
-			eventoRepository.save(Evento2);
-			eventoRepository.save(Evento3);
-
-		}
- */
