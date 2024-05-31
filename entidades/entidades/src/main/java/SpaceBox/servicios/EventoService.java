@@ -37,11 +37,8 @@ public class EventoService {
             throw new EventoFallidoException();
         }            
         
-        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+        //Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
 
-        if(usuario.isEmpty()) {
-            throw new EventoNoAutorizadoException();
-        }
 
         Optional<Evento> evento = repo.findById(idElemento);
 
@@ -88,7 +85,6 @@ public class EventoService {
         else{            
             
             Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
-            if(usuario.isEmpty()) throw new EventoNoAutorizadoException();
 
             Optional<Evento> e = repo.findById(id);
 
@@ -108,12 +104,10 @@ public class EventoService {
     */
     public void actualizarEvento(Integer id, Integer idEntrenador, EventoNuevoDTO eventoNuevo) {
         
-        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+        //Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
 
         if(eventoNuevo.getIdEntrenador() < 0 || id < 0 || idEntrenador < 0 || eventoNuevo.getIdCliente() < 0){
             throw new EventoFallidoException();
-        } else if (usuario.isEmpty()) {
-           throw new EventoNoAutorizadoException();
         } else {
             Optional<Evento> evento = repo.findById(id);
 
@@ -146,12 +140,10 @@ public class EventoService {
     // - 404: No se ha encontrado eventos de esas caracteristicas
     public List<Evento> obtenerDisponibilidad(Integer idEntrenador) {
 
-        Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
+        //Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
 
         if(idEntrenador < 0){
             throw new EventoFallidoException();
-        } else if (usuario.isEmpty()) {
-             throw new EventoNoAutorizadoException();
         } else {
             if (repo.findByIdEntrenador(idEntrenador).isEmpty()) {
                 throw new EventoNoEncontradoException();
@@ -177,9 +169,6 @@ public class EventoService {
             throw new EventoFallidoException();
         }
         Optional<UserDetails> usuario = SecurityConfguration.getAuthenticatedUser();
-        if(usuario.isEmpty()){
-            throw new EventoNoAutorizadoException();
-        } 
         
         if(usuario.get().getUsername().compareTo(idEntrenador.toString()) != 0 ){
             throw new EventoNoAutorizadoException();

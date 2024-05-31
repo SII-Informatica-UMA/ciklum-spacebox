@@ -33,7 +33,7 @@ import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.description;
+//import static org.mockito.Mockito.description;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = EntidadesApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -611,6 +611,30 @@ class EntidadesApplicationTests {
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 				assertThat(eventoRepository.count()).isEqualTo(3);
 			}
+
+			@Test
+			@DisplayName("y no se borra porque no esta autenticado")
+			public void borrarEventoNoAutenticado(){
+				HttpHeaders headers = new HttpHeaders();
+
+				HttpEntity<Void> entity = new HttpEntity<>(headers);
+	
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", org.springframework.http.HttpMethod.DELETE, entity, Void.class);
+	
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+				assertThat(eventoRepository.count()).isEqualTo(3);
+			}
+
+			@Test
+			@DisplayName("y no se borra porque el evento no existe")
+			public void borrarEventoNoExiste(){
+				var peticion = delete("http","localhost",port, "calendario/1/1000");
+	
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+	
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+				assertThat(eventoRepository.count()).isEqualTo(3);
+			}
 		}
 
 		// ------------------------------------------------ GET /calendario/{idEntrenador}
@@ -712,7 +736,14 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y no se crea porque no se tienen permisos")
 			public void publicarEventoSinPermisos(){
-				
+				var nuevoEvento = new EventoNuevoDTO("evento1", "descripcion de evento 1", 
+				"observaciones 1", "lugar 1", 1, "inicio 1", "regla de recurrencia 1", 1, Tipo.CITA, 1);
+			
+				var peticion = post("http", "localhost", port, "/calendario/2", nuevoEvento);
+			
+				var respuesta = restTemplate.exchange(peticion,Void.class);
+			
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 			}
 		}
 	}
