@@ -380,10 +380,7 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y no se obtiene el evento porque no se ha autenticado")
 			public void obtenerEventoNoAutenticado() {
-				userDetails = jwtUtil.createUserDetails("30", "", List.of("ROLE_USER")) ;
-				token = jwtUtil.generateToken(userDetails) ;
 				HttpHeaders headers = new HttpHeaders();
-				headers.add("Authorization", "Bearer " + token);
 
 				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
@@ -414,7 +411,7 @@ class EntidadesApplicationTests {
 				headers.add("Authorization", "Bearer " + token);
 
 				HttpEntity<EventoNuevoDTO> entity = new HttpEntity<>(nuevoEvento, headers);
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/-1/1", 
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/calendario/1/1", 
 				org.springframework.http.HttpMethod.PUT, entity, Void.class);
 
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -654,10 +651,7 @@ class EntidadesApplicationTests {
 			@Test
 			@DisplayName("y no se obtiene la disponibilidad porque el usuario no se ha autenticado")
 			public void  obtenerDisponibilidadNoAutenticado() {
-				userDetails = jwtUtil.createUserDetails("30", "", List.of("ROLE_USER")) ;
-				token = jwtUtil.generateToken(userDetails) ;
 				HttpHeaders headers = new HttpHeaders();
-				headers.add("Authorization", "Bearer " + token);
 
 				HttpEntity<Void> entity = new HttpEntity<>(headers);
 	
